@@ -20,20 +20,21 @@ if __name__ == '__main__':
     
     # Construct PuLP representation of graph
     problem, edge_to_variable = constructPuLPFromGraph(G)
-    print(problem)
-
     # There isn't a chosen quantity yet, so add one
     problem += edge_to_variable[(1, 6)] == 100
+    print(problem)
+
 
     status = problem.solve()
     print(status)
 
     # Add label for ease of reading
     for idx, node in G.nodes.items():
-        if isinstance(node['object'], MachineNode):
-            node['label'] = node['object'].machine
-        elif isinstance(node['object'], IngredientNode):
-            node['label'] = node['object'].name
+        nobj = node['object']
+        if isinstance(nobj, MachineNode):
+            node['label'] = nobj.machine
+        elif isinstance(nobj, IngredientNode):
+            node['label'] = nobj.name
         node['label'] = f"({idx}) {node['label']}"
         node['shape'] = 'box'
     

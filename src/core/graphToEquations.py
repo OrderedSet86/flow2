@@ -38,14 +38,17 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
     
     for idx, node in G.nodes.items():
         # At this point all variable edge -> index relations are constructed
+        nobj = node['object']
         if isinstance(nobj, IngredientNode):
             # Construct ingredient equality equations
             in_edges = G.in_edges(idx)
             out_edges = G.out_edges(idx)
+            if len(in_edges) == 0 or len(out_edges) == 0:
+                continue
             problem += (
                 sum([edge_to_variable[in_edge] for in_edge in in_edges])
-                -
-                sum([edge_to_variable[out_edge] for out_edge in out_edges])
+                +
+                sum([-edge_to_variable[out_edge] for out_edge in out_edges])
                 ==
                 0
             )
