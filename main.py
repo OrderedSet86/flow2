@@ -8,14 +8,14 @@ from src.data.basicTypes import IngredientNode, MachineNode
 
 
 if __name__ == '__main__':
-    flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
-    light_fuel_path = flow_projects_path / 'power/oil/light_fuel.yaml'
+    # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
+    # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
+    yaml_path = Path('temporaryFlowProjects/testProjects/loopGraph.yaml')
 
-    G = constructDisjointGraphFromFlow1Yaml(light_fuel_path)
+    G = constructDisjointGraphFromFlow1Yaml(yaml_path)
+    G = produceConnectedGraphFromDisjoint(G)
     for idx, node in G.nodes.items():
         print(idx, node)
-
-    G = produceConnectedGraphFromDisjoint(G)
     
     # Add label for ease of reading
     for idx, node in G.nodes.items():
@@ -23,6 +23,7 @@ if __name__ == '__main__':
             node['label'] = node['object'].machine
         elif isinstance(node['object'], IngredientNode):
             node['label'] = node['object'].name
+        node['shape'] = 'box'
 
     ag = nx.nx_agraph.to_agraph(G)
     ag.draw('proto.pdf', prog='dot')
