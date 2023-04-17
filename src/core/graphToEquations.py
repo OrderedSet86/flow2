@@ -22,6 +22,9 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
                     edge_to_variable[edge] = LpVariable(f'x{variable_index}', lowBound=0, cat='Continuous')
                     variable_index += 1
             
+            if len(in_edges) == 0 or len(out_edges) == 0:
+                continue
+
             for in_edge in in_edges:
                 for out_edge in out_edges:
                     # Look up relationship in Machine node
@@ -45,6 +48,7 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
             out_edges = G.out_edges(idx)
             if len(in_edges) == 0 or len(out_edges) == 0:
                 continue
+
             problem += (
                 sum([edge_to_variable[in_edge] for in_edge in in_edges])
                 +

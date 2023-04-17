@@ -21,12 +21,15 @@ if __name__ == '__main__':
     # Construct PuLP representation of graph
     problem, edge_to_variable = constructPuLPFromGraph(G)
     # There isn't a chosen quantity yet, so add one
-    problem += edge_to_variable[(1, 6)] == 100
+    problem += edge_to_variable[(1, 7)] == 1000
     print(problem)
-
 
     status = problem.solve()
     print(status)
+
+    if status == 1:
+        for variable in edge_to_variable.values():
+            print(variable, variable.value())
 
     # Add label for ease of reading
     for idx, node in G.nodes.items():
