@@ -1,17 +1,9 @@
-from collections import defaultdict
-
 import networkx as nx
 
-from src.data.basicTypes import EdgeData, IngredientNode, MachineNode
+from src.data.basicTypes import EdgeData, ExternalNode, IngredientNode, MachineNode
 
 
 def produceConnectedGraphFromDisjoint(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
-    # ingredient_by_type_to_node_id = {'I': defaultdict(list), 'O': defaultdict(list)}
-    # for idx, node in G.nodes.items():
-    #     if isinstance(node['object'], IngredientNode):
-    #         ingredient_by_type_to_node_id[node['object'].base_direction][node['object'].name].append(idx)
-    # print(ingredient_by_type_to_node_id)
-
     # Construct a new graph with the same MachineNodes, but unique IngredientNodes (by name)
     # Add pre-existing MachineNodes
     new_graph = nx.MultiDiGraph()
@@ -44,8 +36,26 @@ def produceConnectedGraphFromDisjoint(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
                     elif direction == 'O':
                         new_graph.add_edge(old_idx_to_new_idx[old_idx], nodes_exist[ingredient_name], object=EdgeData(ingredient_name, -1))
 
-    # Add "external nodes" for each machine
-    # These will be minimized in the final PuLP problem
-    # TODO:
-
     return new_graph
+
+
+def addExternalNodes(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
+    # For each ingredient, add an external source and sink
+    # (Mutates existing graph)
+
+    node_idx = G.number_of_nodes()
+
+    for ingnode_idx, node in list(G.nodes.items()):
+        nobj = node['object']
+        if isinstance(nobj, IngredientNode):
+            # Source
+            G.add_node(node_idx, object=ExternalNode(f'[Source] {nobj.name}', {}, {nobj.name: 1000}, 0, 1))
+            G.add_edge(node_idx, ingnode_idx, object=EdgeData(nobj.name, 1000))
+            node_idx += 1
+
+            # Sink
+            G.add_node(node_idx, object=ExternalNode(f'[Sink] {nobj.name}', {nobj.name: 1000}, {}, 0, 1))
+            G.add_edge(ingnode_idx, node_idx, object=EdgeData(nobj.name, 1000))
+            node_idx += 1
+    
+    return G

@@ -2,9 +2,10 @@ from pathlib import Path
 
 import networkx as nx
 
-from src.core.connectGraph import produceConnectedGraphFromDisjoint
+from src.core.connectGraph import produceConnectedGraphFromDisjoint, addExternalNodes
 from src.core.flow1Compat import constructDisjointGraphFromFlow1Yaml
 from src.core.graphToEquations import constructPuLPFromGraph
+from src.core.postProcessing import pruneZeroEdges
 from src.data.basicTypes import IngredientNode, MachineNode
 
 
@@ -15,17 +16,20 @@ if __name__ == '__main__':
 
     G = constructDisjointGraphFromFlow1Yaml(yaml_path)
     G = produceConnectedGraphFromDisjoint(G)
+    G = addExternalNodes(G)
     for idx, node in G.nodes.items():
         print(idx, node)
     
     # Construct PuLP representation of graph
     problem, edge_to_variable = constructPuLPFromGraph(G)
     # There isn't a chosen quantity yet, so add one
-    problem += edge_to_variable[(1, 7)] == 1000
+    problem += edge_to_variable[(1, 6)] == 1000
     print(problem)
 
     status = problem.solve()
     print(status)
+
+    G = pruneZeroEdges(G, edge_to_variable)
 
     if status == 1:
         for variable in edge_to_variable.values():

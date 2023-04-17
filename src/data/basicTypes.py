@@ -21,3 +21,6 @@ class IngredientNode:
 class EdgeData:
     name: str
     base_quant: int
+
+class ExternalNode(MachineNode):
+    pass

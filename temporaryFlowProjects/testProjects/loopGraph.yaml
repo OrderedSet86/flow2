@@ -18,10 +18,3 @@
     diluted sulfuric acid: 1000
   eut: 120
   dur: 8
-- m: diluted sulfuric provider
-  tier: MV
-  I: {}
-  O:
-    diluted sulfuric acid: 1000
-  eut: 100
-  dur: 8

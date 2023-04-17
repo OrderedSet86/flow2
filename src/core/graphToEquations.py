@@ -1,11 +1,12 @@
 import networkx as nx
 from pulp import LpProblem, LpMinimize, LpVariable
 
-from src.data.basicTypes import EdgeData, IngredientNode, MachineNode
+from src.data.basicTypes import EdgeData, ExternalNode, IngredientNode, MachineNode
 
 
 def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
     problem = LpProblem('GTNH_Flowchart', LpMinimize)
+    objective_function = 0
 
     edge_to_variable = {}
     variable_index = 0
@@ -49,6 +50,7 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
             if len(in_edges) == 0 or len(out_edges) == 0:
                 continue
 
+            # Total I/O for ingredient
             problem += (
                 sum([edge_to_variable[in_edge] for in_edge in in_edges])
                 +
@@ -56,5 +58,18 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
                 ==
                 0
             )
+
+            # Add connected ExternalNodes to objective function
+            for in_edge in in_edges:
+                parent_obj = G.nodes[in_edge[0]]['object']
+                if isinstance(parent_obj, ExternalNode):
+                    objective_function += edge_to_variable[in_edge]
+            for out_edge in out_edges:
+                child_obj = G.nodes[out_edge[1]]['object']
+                if isinstance(child_obj, ExternalNode):
+                    objective_function += edge_to_variable[out_edge]
     
+    if not isinstance(objective_function, int):
+        problem += objective_function
+
     return problem, edge_to_variable
