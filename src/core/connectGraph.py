@@ -44,4 +44,8 @@ def produceConnectedGraphFromDisjoint(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
                     elif direction == 'O':
                         new_graph.add_edge(old_idx_to_new_idx[old_idx], nodes_exist[ingredient_name], object=EdgeData(ingredient_name, -1))
 
+    # Add "external nodes" for each machine
+    # These will be minimized in the final PuLP problem
+    # TODO:
+
     return new_graph
