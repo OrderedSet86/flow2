@@ -1,0 +1,42 @@
+USR: user input {
+    FLOWv1: gtnh-flow v1 YAML config file
+    WEBNEI: {
+        NEI: user chosen WebNEI recipes
+        UM: user machine locking / target info
+    }
+    IR: input recipes
+    ED: eut / duration
+    ML: machine locking / target info
+    FLOWv1 -> ED
+    FLOWv1 -> IR
+    FLOWv1 -> ML
+    WEBNEI.NEI -> IR
+    WEBNEI.NEI -> ED
+    WEBNEI.UM -> ML
+}
+
+CORE: gtnh-flow v2 core {
+    DJ: disjoint digraphs of machine and ingredient nodes
+    GCS: digraph connection solver
+    SG: single unbaalanced digraph representing the machine flow process
+    GBS: digraph balancing solver
+    BG: balanced digraph
+    DJ -> GCS
+    GCS -> SG
+    SG -> GBS
+    GBS -> BG
+}
+USR.IR -> CORE.DJ
+USR.ED -> CORE.GBS
+USR.ML -> CORE.GBS
+
+DIS: gtnh-flow v2 display {
+    WEBNEI {
+        UG: unbalanced graph
+        BG: balanced graph
+    }
+    GBG: graphviz balanced graph (v1 compatibility)
+}
+CORE.SG -> DIS.WEBNEI.UG
+CORE.BG -> DIS.WEBNEI.BG
+CORE.BG -> DIS.GBG
