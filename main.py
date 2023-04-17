@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import networkx as nx
+from pulp import PULP_CBC_CMD
 
 from src.core.connectGraph import produceConnectedGraphFromDisjoint, addExternalNodes
 from src.core.flow1Compat import constructDisjointGraphFromFlow1Yaml
@@ -12,7 +13,7 @@ from src.data.basicTypes import IngredientNode, MachineNode
 if __name__ == '__main__':
     # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
     # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
-    yaml_path = Path('temporaryFlowProjects/testProjects/loopGraph.yaml')
+    yaml_path = Path('temporaryFlowProjects/mk1.yaml')
 
     G = constructDisjointGraphFromFlow1Yaml(yaml_path)
     G = produceConnectedGraphFromDisjoint(G)
@@ -23,13 +24,16 @@ if __name__ == '__main__':
     # Construct PuLP representation of graph
     problem, edge_to_variable = constructPuLPFromGraph(G)
     # There isn't a chosen quantity yet, so add one
-    problem += edge_to_variable[(1, 6)] == 1000
+    user_chosen_variable = edge_to_variable[(0, 7)]
+    user_chosen_variable.setInitialValue(10)
+    user_chosen_variable.fixValue()
+    
     print(problem)
 
-    status = problem.solve()
+    status = problem.solve(PULP_CBC_CMD(msg=True, warmStart=True))
     print(status)
 
-    G = pruneZeroEdges(G, edge_to_variable)
+    # G = pruneZeroEdges(G, edge_to_variable)
 
     if status == 1:
         for variable in edge_to_variable.values():
