@@ -48,6 +48,13 @@ def addExternalNodes(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
     for ingnode_idx, node in list(G.nodes.items()):
         nobj = node['object']
         if isinstance(nobj, IngredientNode):
+            # Do not add if:
+            # 1. Ingredient is already a source or sink (this will give inaccurate objective information for the LP problem)
+            in_edges = G.in_edges(ingnode_idx)
+            out_edges = G.out_edges(ingnode_idx)
+            if len(in_edges) == 0 or len(out_edges) == 0:
+                continue
+
             # Source
             G.add_node(node_idx, object=ExternalNode(f'[Source] {nobj.name}', {}, {nobj.name: 1000}, 0, 1))
             G.add_edge(node_idx, ingnode_idx, object=EdgeData(nobj.name, 1000))
