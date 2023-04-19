@@ -26,10 +26,10 @@ if __name__ == '__main__':
     
     # Construct PuLP representation of graph
     problem, edge_to_variable = constructPuLPFromGraph(G)
-    for edge, variable in edge_to_variable.items():
-        # Warm start all non-ExternalNode edges to 1
-        if not isinstance(G.nodes[edge[0]]['object'], ExternalNode) and not isinstance(G.nodes[edge[1]]['object'], ExternalNode):
-            variable.setInitialValue(1)
+    # for edge, variable in edge_to_variable.items():
+    #     # Warm start all non-ExternalNode edges to 1
+    #     if not isinstance(G.nodes[edge[0]]['object'], ExternalNode) and not isinstance(G.nodes[edge[1]]['object'], ExternalNode):
+    #         variable.setInitialValue(1)
 
     # There isn't a chosen quantity yet, so add one
     # The YAML file has one since this is Flow1 compatible, so get it from there
@@ -71,7 +71,6 @@ if __name__ == '__main__':
         if status == 1:
             label_parts.append(f'{edge_to_variable[index_idx].value():.2f}')
         edge['label'] = '\n'.join(label_parts)
-
 
     ag = nx.nx_agraph.to_agraph(G)
     ag.draw('proto.pdf', prog='dot')

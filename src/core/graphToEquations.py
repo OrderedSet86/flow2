@@ -1,11 +1,11 @@
 import networkx as nx
-from pulp import LpProblem, LpMinimize, LpVariable
+from pulp import LpProblem, LpMaximize, LpMinimize, LpVariable
 
 from src.data.basicTypes import EdgeData, ExternalNode, IngredientNode, MachineNode
 
 
 def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
-    problem = LpProblem('GTNH_Flowchart', LpMinimize)
+    problem = LpProblem('GTNH_Flowchart', LpMaximize)
     objective_function = 0
 
     edge_to_variable = {}
@@ -26,11 +26,20 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
             if len(in_edges) == 0 or len(out_edges) == 0:
                 continue
 
+            print(in_edges)
+
             for in_edge in in_edges:
                 for out_edge in out_edges:
                     # Look up relationship in Machine node
-                    in_edge_ingredient = G.get_edge_data(*in_edge)[0]['object'].name
-                    out_edge_ingredient = G.get_edge_data(*out_edge)[0]['object'].name
+                    # Need to do this kind of indexing because MultiDiGraph edges can look like [(from_node, to_node, which_one)]
+                    if len(in_edge) == 3:
+                        in_edge_ingredient = G.edges[*in_edge]['object'].name
+                    else:
+                        in_edge_ingredient = G.edges[*in_edge, 0]['object'].name
+                    if len(out_edge) == 3:
+                        out_edge_ingredient = G.edges[*out_edge]['object'].name
+                    else:
+                        out_edge_ingredient = G.edges[*out_edge, 0]['object'].name
                     constant_multiple = nobj.O[out_edge_ingredient] / nobj.I[in_edge_ingredient]
 
                     # Add to problem definition
@@ -63,12 +72,20 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
             for in_edge in in_edges:
                 parent_obj = G.nodes[in_edge[0]]['object']
                 if isinstance(parent_obj, ExternalNode):
-                    objective_function += edge_to_variable[in_edge]
+                    objective_function += -10000000* edge_to_variable[in_edge]
             for out_edge in out_edges:
                 child_obj = G.nodes[out_edge[1]]['object']
                 if isinstance(child_obj, ExternalNode):
-                    objective_function += edge_to_variable[out_edge]
+                    objective_function += -10000000* edge_to_variable[out_edge]
     
+    # Add maximum flow objective function
+    # This is the best as it minimizes the amount of external ingredients used
+    for edge_idx, _ in G.edges.items():
+        edge = edge_idx[:2]
+        from_node, to_node = edge
+        if not isinstance(G.nodes[from_node]['object'], ExternalNode) and not isinstance(G.nodes[to_node]['object'], ExternalNode):
+            objective_function += edge_to_variable[edge]
+
     if not isinstance(objective_function, int):
         problem += objective_function
 

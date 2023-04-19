@@ -1,10 +1,10 @@
-# - m: '[Source] PMP'
-#   tier: HV
-#   I: {}
-#   O:
-#     PMP: 1
-#   eut: 0
-#   dur: 1
+- m: '[Source] PMP'
+  tier: HV
+  I: {}
+  O:
+    PMP: 1
+  eut: 0
+  dur: 1
 - m: large chemical reactor
   tier: EV
   I:

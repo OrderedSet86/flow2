@@ -7,7 +7,7 @@ def addExternalNodes(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
     # For each ingredient, add an external source and sink
     # (Mutates existing graph)
 
-    node_idx = G.number_of_nodes()
+    highest_node_idx = max(G.nodes.keys()) + 1
 
     for ingnode_idx, node in list(G.nodes.items()):
         nobj = node['object']
@@ -20,14 +20,14 @@ def addExternalNodes(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
                 continue
 
             # Source
-            G.add_node(node_idx, object=ExternalNode(f'[Source] {nobj.name}', {}, {nobj.name: 1000}, 0, 1))
-            G.add_edge(node_idx, ingnode_idx, object=EdgeData(nobj.name, 1000))
-            node_idx += 1
+            G.add_node(highest_node_idx, object=ExternalNode(f'[Source] {nobj.name}', {}, {nobj.name: 1000}, 0, 1))
+            G.add_edge(highest_node_idx, ingnode_idx, object=EdgeData(nobj.name, 1000))
+            highest_node_idx += 1
 
             # Sink
-            G.add_node(node_idx, object=ExternalNode(f'[Sink] {nobj.name}', {nobj.name: 1000}, {}, 0, 1))
-            G.add_edge(ingnode_idx, node_idx, object=EdgeData(nobj.name, 1000))
-            node_idx += 1
+            G.add_node(highest_node_idx, object=ExternalNode(f'[Sink] {nobj.name}', {nobj.name: 1000}, {}, 0, 1))
+            G.add_edge(ingnode_idx, highest_node_idx, object=EdgeData(nobj.name, 1000))
+            highest_node_idx += 1
     
     return G
 
