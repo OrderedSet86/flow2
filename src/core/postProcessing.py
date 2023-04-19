@@ -22,15 +22,16 @@ def pruneZeroEdges(G: nx.MultiDiGraph, edge_to_variable: dict[tuple, LpVariable]
         if isinstance(node['object'], ExternalNode):
             in_edges = list(G.in_edges(idx))
             out_edges = list(G.out_edges(idx))
-            if len(in_edges) == 1:
-                # ExternalNode is a sink
-                connected_node_idx = in_edges[0][0]
-            elif len(out_edges) == 1:
-                # ExternalNode is a source
-                connected_node_idx = out_edges[0][1]
+            if len(in_edges) == 1 or len(out_edges) == 1:
+                if len(in_edges) == 1:
+                    # ExternalNode is a sink
+                    connected_node_idx = in_edges[0][0]
+                elif len(out_edges) == 1:
+                    # ExternalNode is a source
+                    connected_node_idx = out_edges[0][1]
 
-            if len(G.in_edges(connected_node_idx)) == 1 and len(G.out_edges(connected_node_idx)) == 1:
-                # Only connected to this ExternalNode
-                G.remove_node(idx)
+                if len(G.in_edges(connected_node_idx)) == 1 and len(G.out_edges(connected_node_idx)) == 1:
+                    # Only connected to this ExternalNode
+                    G.remove_node(idx)
 
     return G

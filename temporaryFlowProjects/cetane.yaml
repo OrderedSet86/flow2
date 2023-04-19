@@ -16,7 +16,7 @@
     ethenone: 1000
   O:
     tetranitromethane: 2000
-    # water: 9000
+    water: 9000
   eut: 120
   dur: 24
 - m: LCR
@@ -26,7 +26,7 @@
     ammonia: 1000
   O:
     nitric acid: 1000
-    # water: 1000
+    water: 1000
   eut: 30
   dur: 16
 - m: LCR
@@ -80,7 +80,7 @@
 - m: LCR
   tier: HV
   I:
-    # water: 1000
+    water: 1000
     oxygen: 3000
     sulfur dust: 1
   O:

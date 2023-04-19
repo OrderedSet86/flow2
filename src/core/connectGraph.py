@@ -37,32 +37,3 @@ def produceConnectedGraphFromDisjoint(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
                         new_graph.add_edge(old_idx_to_new_idx[old_idx], nodes_exist[ingredient_name], object=EdgeData(ingredient_name, -1))
 
     return new_graph
-
-
-def addExternalNodes(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
-    # For each ingredient, add an external source and sink
-    # (Mutates existing graph)
-
-    node_idx = G.number_of_nodes()
-
-    for ingnode_idx, node in list(G.nodes.items()):
-        nobj = node['object']
-        if isinstance(nobj, IngredientNode):
-            # Do not add if:
-            # 1. Ingredient is already a source or sink (this will give inaccurate objective information for the LP problem)
-            in_edges = G.in_edges(ingnode_idx)
-            out_edges = G.out_edges(ingnode_idx)
-            if len(in_edges) == 0 or len(out_edges) == 0:
-                continue
-
-            # Source
-            G.add_node(node_idx, object=ExternalNode(f'[Source] {nobj.name}', {}, {nobj.name: 1000}, 0, 1))
-            G.add_edge(node_idx, ingnode_idx, object=EdgeData(nobj.name, 1000))
-            node_idx += 1
-
-            # Sink
-            G.add_node(node_idx, object=ExternalNode(f'[Sink] {nobj.name}', {nobj.name: 1000}, {}, 0, 1))
-            G.add_edge(ingnode_idx, node_idx, object=EdgeData(nobj.name, 1000))
-            node_idx += 1
-    
-    return G
