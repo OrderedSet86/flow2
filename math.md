@@ -129,7 +129,7 @@ You can attempt to "mitigate" the problem by setting the penalty for pulling fro
 
 It also doesn't solve platline. The reason for this is because our original problem with "sensitive" solutions remains. Now that $\dfrac{c_2}{c_1} >> 1$, the $\sum{c_2 * edge_{source/sink}}$ dominates the rest of the expression, unreasonable 2 < 1000 solutions are prioritized again.
 
-Ok, so what we should really be prioritizing is not the integer quantity of source/sink ingredient flow (it should always be the amount needed for solving the chart), but instead minimizing the number of source/sink flow nodes added to the pre-existing chart. Then the solution will be the one that minimizes pulling from external sources. Unfortunately, this means we can no longer calculate the source/sink quantities directly in the linear program, as there is no way to represent a "boolean" switch of on/off in the required format of the objective function:
+Ok, so what we should really be prioritizing is not the numerical quantity of source/sink ingredient flow (it should always be the amount needed for solving the chart), but instead minimizing the number of source/sink flow nodes added to the pre-existing chart. Then the solution will be the one that minimizes pulling from external sources. Unfortunately, this means we can no longer calculate the source/sink quantities directly in the linear program, as there is no way to represent a "boolean" switch of on/off in the required format of the objective function:
 
 $$\sum{c_x * v_x}$$
 
@@ -137,6 +137,6 @@ One way would be to make multiple graphs - one for each possible combination of 
 
 $$\sum_{r=1}^{14}{ _{n}c_{r}} = 16383$$
 
-Ok, that's not good. And it scales exponentially for sure. We need to support platline, naqline, and stargate.
+Ok, that's not good. And it scales exponentially for sure. We need to support platline, naqline, and stargate. Maybe we can represent it by making a Mixed Integer Linear Problem (MILP), and creating a new Integer-only variable for whether a source/sink is on? This too should work - but the complexity scaling for MILPs is NP-hard. The worst case scenario for a MILP is doing the same as our combinations method, so it doesn't save us.
 
 So - the remaining question. Is it salvageable to treat GTNH machine flow problems as a linear program? Or are we stuck with exponential time complexity to get fully accurate solutions?
