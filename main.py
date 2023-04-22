@@ -15,12 +15,12 @@ from src.data.basicTypes import ExternalNode, IngredientNode, MachineNode
 if __name__ == '__main__':
     # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
     # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
-    yaml_path = Path('temporaryFlowProjects/230_platline.yaml')
+    yaml_path = Path('temporaryFlowProjects/testProjects/simpleGraph.yaml')
 
     G = constructDisjointGraphFromFlow1Yaml(yaml_path)
     G = produceConnectedGraphFromDisjoint(G)
     G = removeIgnorableIngredients(G) # eg water
-    G = addExternalNodes(G)
+    # G = addExternalNodes(G)
     for idx, node in G.nodes.items():
         print(idx, node)
     
