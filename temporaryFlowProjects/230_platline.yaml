@@ -140,17 +140,17 @@
   eut: 30
   dur: 15
   group: iridium
-# - m: large chemical reactor
-#   tier: HV
-#   I:
-#     ammonium chloride: 3000
-#     acidic iridium solution: 1000
-#   O:
-#     iridium chloride dust: 1
-#     ammonia: 3000
-#   eut: 30
-#   dur: 15
-#   group: iridium
+- m: large chemical reactor
+  tier: HV
+  I:
+    ammonium chloride: 3000
+    acidic iridium solution: 1000
+  O:
+    iridium chloride dust: 1
+    # ammonia: 3000
+  eut: 30
+  dur: 15
+  group: iridium
 # - m: large chemical reactor
 #   tier: EV
 #   I:

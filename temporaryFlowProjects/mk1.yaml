@@ -23,34 +23,34 @@
     naquadah gas: 60
   eut: 1920
   dur: 1
-- m: centrifuge
-  tier: MV
-  I:
-    naquadah emulsion: 1000
-  O:
-    naquadah solution: 500
-  eut: 120
-  dur: 40
-- m: large chemical reactor
-  tier: LV
-  I:
-    acid naquadah emulsion: 1000
-    quicklime: 32
-  O:
-    fluorspar: 4
-    antimony trioxide: 0.25
-    naquadah emulsion: 1000
-  eut: 30
-  dur: 12
-- m: electric blast furnace
-  coils: nichrome
-  heat: 3400
-  tier: IV
-  I:
-    fluoroantimonic acid: 4000
-    naquadria: 32
-  O:
-    acid naquadah emulsion: 8000
-    extremely unstable naquadah dust: 17
-  eut: 4080
-  dur: 180
+# - m: centrifuge
+#   tier: MV
+#   I:
+#     naquadah emulsion: 1000
+#   O:
+#     naquadah solution: 500
+#   eut: 120
+#   dur: 40
+# - m: large chemical reactor
+#   tier: LV
+#   I:
+#     acid naquadah emulsion: 1000
+#     quicklime: 32
+#   O:
+#     fluorspar: 4
+#     antimony trioxide: 0.25
+#     naquadah emulsion: 1000
+#   eut: 30
+#   dur: 12
+# - m: electric blast furnace
+#   coils: nichrome
+#   heat: 3400
+#   tier: IV
+#   I:
+#     fluoroantimonic acid: 4000
+#     naquadria: 32
+#   O:
+#     acid naquadah emulsion: 8000
+#     extremely unstable naquadah dust: 17
+#   eut: 4080
+#   dur: 180

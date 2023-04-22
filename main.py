@@ -15,7 +15,7 @@ from src.data.basicTypes import ExternalNode, IngredientNode, MachineNode
 if __name__ == '__main__':
     # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
     # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
-    yaml_path = Path('temporaryFlowProjects/230_platline.yaml')
+    yaml_path = Path('temporaryFlowProjects/mk1.yaml')
 
     G = constructDisjointGraphFromFlow1Yaml(yaml_path)
     G = produceConnectedGraphFromDisjoint(G)
@@ -64,6 +64,7 @@ if __name__ == '__main__':
             node['color'] = 'red'
         node['shape'] = 'box'
         node['label'] = f"({idx}) {node['label']}"
+        node['fontname'] = 'arial'
     
     for idx, edge in G.edges.items():
         index_idx = idx[:2]
@@ -71,6 +72,7 @@ if __name__ == '__main__':
         if status == 1:
             label_parts.append(f'{edge_to_variable[index_idx].value():.2f}')
         edge['label'] = '\n'.join(label_parts)
+        edge['fontname'] = 'arial'
 
     ag = nx.nx_agraph.to_agraph(G)
-    ag.draw('proto.pdf', prog='dot')
+    ag.draw('proto.png', prog='dot')
