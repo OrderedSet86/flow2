@@ -1,5 +1,7 @@
 # Steps Towards General GTNH Flow Solving
 
+## Basics
+
 Machine flow problems in GTNH can be represented as a linear system of equations. See the following problem construction, where each edge in the flowchart represents a variable in the linear system of equations:
 
 <table>
@@ -27,6 +29,8 @@ _C5: x0 = 0.896
 </table>
 
 Once the edge values are constructed, the machine counts can be calculated directly from them. For example, if the balanced flowchart needs to output 1000 oxygen/s, and the provider machine produces 500 oxygen/s, then you need 2 of that provider machine.
+
+## Failure Modes
 
 This works excellently for "simple" scenarios. However, it breaks in two situations:
 
@@ -102,6 +106,8 @@ As a result, general machine flows in GTNH cannot be represented just as a linea
 
 We need some way to programmatically insert source and sink nodes based on the scenario at hand. We cannot simply observe the chart afterwards and say "there is an excess" as this will not count as a valid solution to the linear system of equations and therefore never be found by the original program.
 
+## Linear Programming and Selecting an Objective Function
+
 One solution is to extend the linear system of equations into a linear program, which allows for specifying an objective function. My first approach at solving this problem was:
 
 1. Insert Source and Sink nodes for every ingredient that is not already a source/sink (ie, IngredientNodes with >0 inputs and >0 outputs).
@@ -129,6 +135,8 @@ You can attempt to "mitigate" the problem by setting the penalty for pulling fro
 
 It also doesn't solve platline. The reason for this is because our original problem with "sensitive" solutions remains. Now that $\dfrac{c_2}{c_1} >> 1$, the $\sum{c_2 * edge_{source/sink}}$ dominates the rest of the expression, unreasonable 2 < 1000 solutions are prioritized again.
 
+## Beyond Linear Programming
+
 Ok, so what we should really be prioritizing is not the numerical quantity of source/sink ingredient flow (it should always be the amount needed for solving the chart), but instead minimizing the number of source/sink flow nodes added to the pre-existing chart. Then the solution will be the one that minimizes pulling from external sources. Unfortunately, this means we can no longer calculate the source/sink quantities directly in the linear program, as there is no way to represent a "boolean" switch of on/off in the required format of the objective function:
 
 $$\sum{c_x * v_x}$$
@@ -138,5 +146,7 @@ One way would be to make multiple graphs - one for each possible combination of 
 $$\sum_{r=1}^{14}{ _{n}c_{r}} = 16383$$
 
 Ok, that's not good. And it scales exponentially for sure. We need to support platline, naqline, and stargate. Maybe we can represent it by making a Mixed Integer Linear Problem (MILP), and creating a new Integer-only variable for whether a source/sink is on? This too should work - but the complexity scaling for MILPs is NP-hard. The worst case scenario for a MILP is doing the same as our combinations method, so it doesn't save us.
+
+## Call to Action
 
 So - the remaining question. Is it salvageable to treat GTNH machine flow problems as a linear program? Or are we stuck with exponential time complexity to get fully accurate solutions?
