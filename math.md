@@ -104,4 +104,39 @@ We need some way to programmatically insert source and sink nodes based on the s
 
 One solution is to extend the linear system of equations into a linear program, which allows for specifying an objective function. My first approach at solving this problem was:
 
-...
+1. Insert Source and Sink nodes for every ingredient that is not already a source/sink (ie, IngredientNodes with >0 inputs and >0 outputs).
+2. Add a minimized objective function equal to the quantity of ingredient pulled from source/sink - this way, pulling from source/sink is disincentivized unless it is necessary to find a feasible solution to the linear system.
+
+This worked as a first approximation, but then some problems had non-ideal solution behavior:
+
+1. Set user chosen variable (eg 10 naqfuel mk1/s)
+2. Get both input ingredients for the parent machine from source
+3. Set all other edge variables to 0, which solves the remainder of the constraint equations
+
+Why was it performing this way? Well, something higher in the tree required a greater quantity of product pulled from source. If the graph was solved "correctly", then it would have pulled 1000 of product B from source, but it could instead solve it by pulling 2 of product A from source and setting everything to 0. 2 < 1000, so this is the minimizing solution.
+
+Ok, well clearly we are missing information in our objective function. It is desirable to have flow between all non source/sink nodes, and the more flow the better. The program should be penalized for solutions which have zero flow between nodes. Then our minimizing objective function can look like:
+
+$$-\sum{c_1 * edge_{machine}} + \sum{c_2 * edge_{source/sink}}$$
+
+This seems fine, until you realize that "the more flow the better for machine edges" means any processes that were previously balanced recycling can be pushed up to infinite flow by simply adding more source product. Going back to our sulfuric acid loop example:
+
+![](media/loopGraph.png)
+
+If you feed 1 extra sulfuric acid from source instead, now the system puts in 0.67 sulfuric acid and gets out 1.67 sulfuric acid. Now the objective function value can go to negative infinity, and the solution is unbounded.
+
+You can attempt to "mitigate" the problem by setting the penalty for pulling from source/sink to a very high number. Specifically, $\dfrac{c_2}{c_1} >> 1$. This sort of works, but is fragile to a highly positive loop (eg where inputting 1 extra from source creates 100000 extra product - which is possible with certain bio lab setups.)
+
+It also doesn't solve platline. The reason for this is because our original problem with "sensitive" solutions remains. Now that $\dfrac{c_2}{c_1} >> 1$, the $\sum{c_2 * edge_{source/sink}}$ dominates the rest of the expression, unreasonable 2 < 1000 solutions are prioritized again.
+
+Ok, so what we should really be prioritizing is not the integer quantity of source/sink ingredient flow (it should always be the amount needed for solving the chart), but instead minimizing the number of source/sink flow nodes added to the pre-existing chart. Then the solution will be the one that minimizes pulling from external sources. Unfortunately, this means we can no longer calculate the source/sink quantities directly in the linear program, as there is no way to represent a "boolean" switch of on/off in the required format of the objective function:
+
+$$\sum{c_x * v_x}$$
+
+One way would be to make multiple graphs - one for each possible combination of source/sink nodes, then linear solve each of them. Then pick the feasible solution with the least zero flow edges, as this is probably the correct solution to the graph problem. This sounds good, until you realize that creating each combination of source/sink nodes is extremely computationally infeasible. The number of these "non-source-sink" IngredientNodes that require source/sink node checking in just a limited subset of platline is 14. The number of combinations that need to be checked is:
+
+$$\sum_{r=1}^{14}{ _{n}c_{r}} = 16383$$
+
+Ok, that's not good. And it scales exponentially for sure. We need to support platline, naqline, and stargate.
+
+So - the remaining question. Is it salvageable to treat GTNH machine flow problems as a linear program? Or are we stuck with exponential time complexity to get fully accurate solutions?
