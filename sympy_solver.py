@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import networkx as nx
-from sympy import linsolve
+import sympy
 
 from src.core.addUserLocking import addSympyUserChosenQuantityFromFlow1Yaml
 from src.core.connectGraph import produceConnectedGraphFromDisjoint
@@ -30,20 +30,60 @@ if __name__ == '__main__':
     # Construct SymPy representation of graph
     system_of_equations, edge_to_variable, ingredient_to_slack_variable = constructSymPyFromGraph(G)
     system_of_equations = addSympyUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, system_of_equations, yaml_path)
+    all_variables = list(edge_to_variable.values()) + list(ingredient_to_slack_variable.values())
+
+    # Try setting slack variables to 0 or skipping if already a number
+    # This gives us at least one purely numerical solution
+    slack_index_to_slack_variable = list(ingredient_to_slack_variable.values())
+
+    res = None
+    first = True
+    while first or any(isinstance(eq, (sympy.core.add.Add, sympy.core.symbol.Symbol)) for eq in res.args[0]):
+        first = False
+        res = sympy.linsolve(system_of_equations, *all_variables)
+        if isinstance(res, sympy.sets.sets.EmptySet):
+            system_of_equations.pop()
+            break
+        else:
+            for sidx, eq in enumerate(res.args[0][-len(ingredient_to_slack_variable):]):
+                if isinstance(eq, (sympy.core.add.Add, sympy.core.symbol.Symbol)):
+                    system_of_equations.append(slack_index_to_slack_variable[sidx]) # == 0
+                    break
+
     print()
     print('=====PROBLEM=====')
     for eq in system_of_equations:
         print(f'{eq} = 0')
     print()
 
-    all_variables = list(edge_to_variable.values()) + list(ingredient_to_slack_variable.values())
-    res = linsolve(system_of_equations, *all_variables)
+    res = sympy.linsolve(system_of_equations, *all_variables)
     print('=====SOLUTION=====')
     for idx, eq in enumerate(res.args[0]):
         if idx < len(edge_to_variable):
             print(f'x{idx} = {eq}')
         else:
             print(f's{idx} = {eq}')
+
+    # Add source/sink nodes based on slack variables
+    node_idx = max(G.nodes.keys()) + 1
+    for idx, node in list(G.nodes.items()):
+        nobj = node['object']
+        if isinstance(nobj, IngredientNode):
+            if nobj.name in ingredient_to_slack_variable:
+                slack_value = res.args[0][sympyVarToIndex(ingredient_to_slack_variable[nobj.name])]
+
+                node_name = node_idx
+                if slack_value > 0:
+                    machine_name = f'[Source] {nobj.name}'
+                    G.add_node(node_name, object=ExternalNode(machine_name, {}, {}, 0, 1))
+                    G.add_edge(node_name, idx, object=None)
+                    edge_to_variable[(node_name, idx)] = ingredient_to_slack_variable[nobj.name]
+                elif slack_value < 0:
+                    machine_name = f'[Sink] {nobj.name}'
+                    G.add_node(node_name, object=ExternalNode(machine_name, {}, {}, 0, 1))
+                    G.add_edge(idx, node_name, object=None)
+                    edge_to_variable[(idx, node_name)] = ingredient_to_slack_variable[nobj.name]
+                node_idx += 1
 
     # Add label for ease of reading
     for idx, node in G.nodes.items():
@@ -70,7 +110,6 @@ if __name__ == '__main__':
     for idx, edge in G.edges.items():
         index_idx = idx[:2]
         label_parts = [str(edge_to_variable[index_idx])]
-        # FIXME:
         if len(res) > 0:
             label_parts.append(f'{res.args[0][sympyVarToIndex(edge_to_variable[index_idx])]}')
         edge['label'] = '\n'.join(label_parts)
