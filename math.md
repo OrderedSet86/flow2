@@ -30,6 +30,10 @@ _C5: x0 = 0.896
 
 Once the edge values are constructed, the machine counts can be calculated directly from them. For example, if the balanced flowchart needs to output 1000 oxygen/s, and the provider machine produces 500 oxygen/s, then you need 2 of that provider machine.
 
+How are the equations calculated? From two sources:
+1. Machine-internal equations, so inputs * outputs number of equations (eg 1 sugar beet makes 8 sugar in an extractor)
+2. Ingredient sanity check equations, so sum(inputs) - sum(outputs) = 0
+
 ## Failure Modes
 
 This works excellently for "simple" scenarios. However, it breaks in two situations:

@@ -1,0 +1,29 @@
+- m: a
+  tier: MV
+  I: 
+    i1: 1
+    i2: 1
+  O:
+    x: 1
+    y: 1
+  eut: 120
+  dur: 30
+- m: b
+  tier: MV
+  I: 
+    i3: 1
+    i4: 1
+  O:
+    y: 1
+    z: 1
+  eut: 120
+  dur: 30
+- m: c
+  tier: MV
+  I: 
+    y: 1
+  O: {}
+  eut: 120
+  dur: 30
+  target:
+    y: 1

@@ -1,4 +1,5 @@
 import networkx as nx
+import sympy
 from pulp import LpProblem, LpMaximize, LpMinimize, LpVariable
 
 from src.data.basicTypes import EdgeData, ExternalNode, IngredientNode, MachineNode
@@ -70,10 +71,12 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
 
             # Add connected ExternalNodes to objective function
             for in_edge in in_edges:
+                # Source
                 parent_obj = G.nodes[in_edge[0]]['object']
                 if isinstance(parent_obj, ExternalNode):
                     objective_function += -10000000* edge_to_variable[in_edge]
             for out_edge in out_edges:
+                # Sink
                 child_obj = G.nodes[out_edge[1]]['object']
                 if isinstance(child_obj, ExternalNode):
                     objective_function += -10000000* edge_to_variable[out_edge]
@@ -90,3 +93,75 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
         problem += objective_function
 
     return problem, edge_to_variable
+
+
+def constructSymPyFromGraph(G: nx.MultiDiGraph) -> \
+    tuple[
+        list[sympy.core.add.Add], # System of equations
+        dict[tuple[int, int], sympy.core.symbol.Symbol] # Edge to variable mapping
+    ]:
+    system_of_equations = []
+    variable_index = 0
+    edge_to_variable = {}
+
+    for idx, node in G.nodes.items():
+        nobj = node['object']
+        if isinstance(nobj, MachineNode):
+            # Construct machine-internal equations
+            in_edges = G.in_edges(idx)
+            out_edges = G.out_edges(idx)
+
+            for edge_list in [in_edges, out_edges]:
+                for edge in edge_list:
+                    edge_to_variable[edge] = sympy.symbols(f'x{variable_index}', positive=True, real=True)
+                    variable_index += 1
+            
+            if len(in_edges) == 0 or len(out_edges) == 0:
+                continue
+
+            for in_edge in in_edges:
+                for out_edge in out_edges:
+                    # Look up relationship in Machine node
+                    # Need to do this kind of indexing because MultiDiGraph edges can look like [(from_node, to_node, which_one)]
+                    if len(in_edge) == 3:
+                        in_edge_ingredient = G.edges[*in_edge]['object'].name
+                    else:
+                        in_edge_ingredient = G.edges[*in_edge, 0]['object'].name
+                    if len(out_edge) == 3:
+                        out_edge_ingredient = G.edges[*out_edge]['object'].name
+                    else:
+                        out_edge_ingredient = G.edges[*out_edge, 0]['object'].name
+                    constant_multiple = sympy.Rational(nobj.O[out_edge_ingredient], nobj.I[in_edge_ingredient])
+
+                    # Add to problem definition
+                    system_of_equations.append(
+                        edge_to_variable[in_edge] * constant_multiple 
+                        - edge_to_variable[out_edge]
+                    )
+    
+    ingredient_to_slack_variable = {}
+    for idx, node in G.nodes.items():
+        # At this point all variable edge -> index relations are constructed
+        nobj = node['object']
+        if isinstance(nobj, IngredientNode):
+            # Construct ingredient equality equations
+            # Additionally, add a slack variable for each ingredient
+            in_edges = G.in_edges(idx)
+            out_edges = G.out_edges(idx)
+            if len(in_edges) == 0 or len(out_edges) == 0:
+                continue
+
+            slack_variable = sympy.symbols(f's{variable_index}', real=True)
+            ingredient_to_slack_variable[nobj.name] = slack_variable
+            variable_index += 1
+
+            # Total I/O for ingredient
+            system_of_equations.append(
+                sum([edge_to_variable[in_edge] for in_edge in in_edges])
+                +
+                sum([-edge_to_variable[out_edge] for out_edge in out_edges])
+                +
+                slack_variable
+            )
+
+    return system_of_equations, edge_to_variable, ingredient_to_slack_variable

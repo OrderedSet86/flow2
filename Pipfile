@@ -8,6 +8,7 @@ networkx = "*"
 pyyaml = "*"
 pygraphviz = "*"
 pulp = "*"
+sympy = "*"
 
 [dev-packages]
 pytest = "*"

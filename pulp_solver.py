@@ -3,7 +3,7 @@ from pathlib import Path
 import networkx as nx
 from pulp import PULP_CBC_CMD
 
-from src.core.addUserLocking import addUserChosenQuantityFromFlow1Yaml
+from src.core.addUserLocking import addPulpUserChosenQuantityFromFlow1Yaml
 from src.core.connectGraph import produceConnectedGraphFromDisjoint
 from src.core.flow1Compat import constructDisjointGraphFromFlow1Yaml
 from src.core.graphToEquations import constructPuLPFromGraph
@@ -15,17 +15,17 @@ from src.data.basicTypes import ExternalNode, IngredientNode, MachineNode
 if __name__ == '__main__':
     # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
     # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
-    yaml_path = Path('temporaryFlowProjects/testProjects/simpleGraph.yaml')
+    yaml_path = Path('temporaryFlowProjects/microsheep.yaml')
 
     G = constructDisjointGraphFromFlow1Yaml(yaml_path)
     G = produceConnectedGraphFromDisjoint(G)
     G = removeIgnorableIngredients(G) # eg water
-    # G = addExternalNodes(G)
+    G = addExternalNodes(G)
     for idx, node in G.nodes.items():
         print(idx, node)
     
     # Construct PuLP representation of graph
-    problem, edge_to_variable = constructPuLPFromGraph(G)
+    system_of_equations, edge_to_variable = constructPuLPFromGraph(G)
     # for edge, variable in edge_to_variable.items():
     #     # Warm start all non-ExternalNode edges to 1
     #     if not isinstance(G.nodes[edge[0]]['object'], ExternalNode) and not isinstance(G.nodes[edge[1]]['object'], ExternalNode):
@@ -33,12 +33,12 @@ if __name__ == '__main__':
 
     # There isn't a chosen quantity yet, so add one
     # The YAML file has one since this is Flow1 compatible, so get it from there
-    problem = addUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, problem, yaml_path)
+    system_of_equations = addPulpUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, system_of_equations, yaml_path)
     
-    print(problem)
+    print(system_of_equations)
 
     seed = 1337 # Choose a seed for reproduceability
-    status = problem.solve(PULP_CBC_CMD(msg=True, warmStart=True, options = [f'RandomS {seed}']))
+    status = system_of_equations.solve(PULP_CBC_CMD(msg=True, warmStart=True, options = [f'RandomS {seed}']))
     print(status)
 
     G = pruneZeroEdges(G, edge_to_variable)
