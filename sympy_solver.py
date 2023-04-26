@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import networkx as nx
+import numpy as np
 import sympy
 
 from src.core.addUserLocking import addSympyUserChosenQuantityFromFlow1Yaml
@@ -19,7 +20,7 @@ def sympyVarToIndex(var):
 if __name__ == '__main__':
     # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
     # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
-    yaml_path = Path('temporaryFlowProjects/jet_fuel.yaml')
+    yaml_path = Path('temporaryFlowProjects/twoslack.yaml')
 
     G = constructDisjointGraphFromFlow1Yaml(yaml_path)
     G = produceConnectedGraphFromDisjoint(G)
@@ -28,27 +29,52 @@ if __name__ == '__main__':
         print(idx, node)
 
     # Construct SymPy representation of graph
-    system_of_equations, edge_to_variable, ingredient_to_slack_variable = constructSymPyFromGraph(G)
+    system_of_equations, edge_to_variable, ingredient_to_slack_variable = constructSymPyFromGraph(G, construct_slack=True)
     system_of_equations = addSympyUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, system_of_equations, yaml_path)
     all_variables = list(edge_to_variable.values()) + list(ingredient_to_slack_variable.values())
 
+    # Compute how over or underdetermined the system is
+    # Can't just compare number of equations to number of variables because some equations are linear combinations of others
+    # So we need to compute the rank of the linear system of equation's matrix
+    def constructMatrix(system_of_equations):
+        matrix = []
+        for eq in system_of_equations:
+            row = []
+            for var in all_variables:
+                row.append(float(eq.coeff(var)))
+            
+            # Check for constant term
+            constant = eq.func(*[term for term in eq.args if not term.free_symbols])
+            row.append(float(constant))
+
+            matrix.append(row)
+        return np.array(matrix)
+
+    mat = constructMatrix(system_of_equations)
+    rank = np.linalg.matrix_rank(mat)
+    print(mat)
+    print(f'Rank of system: {rank}')
+    print(f'Number of variables: {len(all_variables)}')
+    # if rank < len(all_variables):
+    #     raise NotImplementedError('System is underdetermined')
+
     # Try setting slack variables to 0 or skipping if already a number
     # This gives us at least one purely numerical solution
-    slack_index_to_slack_variable = list(ingredient_to_slack_variable.values())
+    # slack_index_to_slack_variable = list(ingredient_to_slack_variable.values())
 
-    res = None
-    first = True
-    while first or any(isinstance(eq, (sympy.core.add.Add, sympy.core.symbol.Symbol)) for eq in res.args[0]):
-        first = False
-        res = sympy.linsolve(system_of_equations, *all_variables)
-        if isinstance(res, sympy.sets.sets.EmptySet):
-            system_of_equations.pop()
-            break
-        else:
-            for sidx, eq in enumerate(res.args[0][-len(ingredient_to_slack_variable):]):
-                if isinstance(eq, (sympy.core.add.Add, sympy.core.symbol.Symbol)):
-                    system_of_equations.append(slack_index_to_slack_variable[sidx]) # == 0
-                    break
+    # res = None
+    # first = True
+    # while first or any(isinstance(eq, (sympy.core.add.Add, sympy.core.symbol.Symbol)) for eq in res.args[0]):
+    #     first = False
+    #     res = sympy.linsolve(system_of_equations, *all_variables)
+    #     if isinstance(res, sympy.sets.sets.EmptySet):
+    #         system_of_equations.pop()
+    #         break
+    #     else:
+    #         for sidx, eq in enumerate(res.args[0][-len(ingredient_to_slack_variable):]):
+    #             if isinstance(eq, (sympy.core.add.Add, sympy.core.symbol.Symbol)):
+    #                 system_of_equations.append(slack_index_to_slack_variable[sidx]) # == 0
+    #                 break
 
     print()
     print('=====PROBLEM=====')
@@ -65,25 +91,25 @@ if __name__ == '__main__':
             print(f's{idx} = {eq}')
 
     # Add source/sink nodes based on slack variables
-    node_idx = max(G.nodes.keys()) + 1
-    for idx, node in list(G.nodes.items()):
-        nobj = node['object']
-        if isinstance(nobj, IngredientNode):
-            if nobj.name in ingredient_to_slack_variable:
-                slack_value = res.args[0][sympyVarToIndex(ingredient_to_slack_variable[nobj.name])]
+    # node_idx = max(G.nodes.keys()) + 1
+    # for idx, node in list(G.nodes.items()):
+    #     nobj = node['object']
+    #     if isinstance(nobj, IngredientNode):
+    #         if nobj.name in ingredient_to_slack_variable:
+    #             slack_value = res.args[0][sympyVarToIndex(ingredient_to_slack_variable[nobj.name])]
 
-                node_name = node_idx
-                if slack_value > 0:
-                    machine_name = f'[Source] {nobj.name}'
-                    G.add_node(node_name, object=ExternalNode(machine_name, {}, {}, 0, 1))
-                    G.add_edge(node_name, idx, object=None)
-                    edge_to_variable[(node_name, idx)] = ingredient_to_slack_variable[nobj.name]
-                elif slack_value < 0:
-                    machine_name = f'[Sink] {nobj.name}'
-                    G.add_node(node_name, object=ExternalNode(machine_name, {}, {}, 0, 1))
-                    G.add_edge(idx, node_name, object=None)
-                    edge_to_variable[(idx, node_name)] = ingredient_to_slack_variable[nobj.name]
-                node_idx += 1
+    #             node_name = node_idx
+    #             if slack_value > 0:
+    #                 machine_name = f'[Source] {nobj.name}'
+    #                 G.add_node(node_name, object=ExternalNode(machine_name, {}, {}, 0, 1))
+    #                 G.add_edge(node_name, idx, object=None)
+    #                 edge_to_variable[(node_name, idx)] = ingredient_to_slack_variable[nobj.name]
+    #             elif slack_value < 0:
+    #                 machine_name = f'[Sink] {nobj.name}'
+    #                 G.add_node(node_name, object=ExternalNode(machine_name, {}, {}, 0, 1))
+    #                 G.add_edge(idx, node_name, object=None)
+    #                 edge_to_variable[(idx, node_name)] = ingredient_to_slack_variable[nobj.name]
+    #             node_idx += 1
 
     # Add label for ease of reading
     for idx, node in G.nodes.items():

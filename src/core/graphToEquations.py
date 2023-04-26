@@ -95,7 +95,7 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
     return problem, edge_to_variable
 
 
-def constructSymPyFromGraph(G: nx.MultiDiGraph) -> \
+def constructSymPyFromGraph(G: nx.MultiDiGraph, construct_slack: bool=True) -> \
     tuple[
         list[sympy.core.add.Add], # System of equations
         dict[tuple[int, int], sympy.core.symbol.Symbol] # Edge to variable mapping
@@ -151,9 +151,10 @@ def constructSymPyFromGraph(G: nx.MultiDiGraph) -> \
             if len(in_edges) == 0 or len(out_edges) == 0:
                 continue
 
-            slack_variable = sympy.symbols(f's{variable_index}', real=True)
-            ingredient_to_slack_variable[nobj.name] = slack_variable
-            variable_index += 1
+            if construct_slack:
+                slack_variable = sympy.symbols(f's{variable_index}', real=True)
+                ingredient_to_slack_variable[nobj.name] = slack_variable
+                variable_index += 1
 
             # Total I/O for ingredient
             system_of_equations.append(
@@ -161,7 +162,7 @@ def constructSymPyFromGraph(G: nx.MultiDiGraph) -> \
                 +
                 sum([-edge_to_variable[out_edge] for out_edge in out_edges])
                 +
-                slack_variable
+                slack_variable if construct_slack else 0
             )
 
     return system_of_equations, edge_to_variable, ingredient_to_slack_variable
