@@ -84,6 +84,36 @@ if __name__ == '__main__':
 
         return usage
 
+    def get_source_coeff(G, source_name):
+        for idx, node in G.nodes.items():
+            # At this point all variable edge -> index relations are constructed
+            nobj = node['object']
+            if isinstance(nobj, IngredientNode):
+                if nobj.name != source_name:
+                    continue
+
+                # Construct ingredient equality equations
+                in_edges = G.in_edges(idx)
+                out_edges = G.out_edges(idx)
+                if len(in_edges) == 0 or len(out_edges) == 0:
+                    continue
+
+                # Add connected ExternalNodes to objective function
+                has_non_external_sources = False
+                for in_edge in in_edges:
+                    # Source
+                    parent_obj = G.nodes[in_edge[0]]['object']
+                    if not isinstance(parent_obj, ExternalNode):
+                        has_non_external_sources = True
+                        break
+
+                # If the source is the only way to get the given ingredient then we assign a smaller weight,
+                # because we only want to prevent sourcing products that can be made internally.
+                source_coeff = 1e9 if has_non_external_sources else 1e3
+                return source_coeff
+
+        return None
+
     # Initial solution with all edges.
     G, status, edge_to_variable = solve(True)
 
@@ -92,11 +122,15 @@ if __name__ == '__main__':
     # and doesn't just source the final ingredients.
     if status == 1:
         # Identify all sources in the graph. We will be trying to remove them.
-        source_names = set()
+        source_names = []
         for idx, node in G.nodes.items():
             nobj = node['object']
             if isinstance(nobj, IngredientNode):
-                source_names.add(nobj.name)
+                source_names.append(nobj.name)
+
+        # We want to check the sources that have a high coefficient first.
+        # These are the ingredients that can also be produced internally.
+        source_names.sort(key=lambda x: -get_source_coeff(G, x))
 
         # Initially we don't exclude anything.
         excluded_sources = set()
@@ -120,6 +154,7 @@ if __name__ == '__main__':
                 # And compute the new graph, with this source excluded (and all previous exclusions too).
                 new_G, new_status, new_edge_to_variable = solve(False, excluded_sources)
 
+                print(source_name, new_status, is_any_variable_none(new_edge_to_variable))
                 if new_status != 1 or is_any_variable_none(new_edge_to_variable):
                     # If there is no solution we restore the previous excluded_sources and try the next source
                     excluded_sources.remove(source_name)
@@ -175,4 +210,4 @@ if __name__ == '__main__':
         edge['fontname'] = 'arial'
 
     ag = nx.nx_agraph.to_agraph(G)
-    ag.draw('proto.png', prog='dot')
+    ag.draw('proto.pdf', prog='dot')
