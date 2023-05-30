@@ -6,7 +6,7 @@ from src.data.basicTypes import EdgeData, ExternalNode, IngredientNode, MachineN
 
 
 def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
-    problem = LpProblem('GTNH_Flowchart', LpMaximize)
+    problem = LpProblem('GTNH_Flowchart', LpMinimize)
     objective_function = 0
 
     edge_to_variable = {}
@@ -74,12 +74,12 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
                 # Source
                 parent_obj = G.nodes[in_edge[0]]['object']
                 if isinstance(parent_obj, ExternalNode):
-                    objective_function += -10000000* edge_to_variable[in_edge]
+                    objective_function += 10000000* edge_to_variable[in_edge]
             for out_edge in out_edges:
                 # Sink
                 child_obj = G.nodes[out_edge[1]]['object']
                 if isinstance(child_obj, ExternalNode):
-                    objective_function += -10000000* edge_to_variable[out_edge]
+                    objective_function += 10000000* edge_to_variable[out_edge]
     
     # Add maximum flow objective function
     # This is the best as it minimizes the amount of external ingredients used
