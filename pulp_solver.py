@@ -15,31 +15,131 @@ from src.data.basicTypes import ExternalNode, IngredientNode, MachineNode
 if __name__ == '__main__':
     # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
     # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
-    yaml_path = Path('temporaryFlowProjects/palladium.yaml')
+    yaml_path = Path('temporaryFlowProjects/230_platline.yaml')
 
-    G = constructDisjointGraphFromFlow1Yaml(yaml_path)
-    G = produceConnectedGraphFromDisjoint(G)
-    G = removeIgnorableIngredients(G) # eg water
-    G = addExternalNodes(G)
-    for idx, node in G.nodes.items():
-        print(idx, node)
-    
-    # Construct PuLP representation of graph
-    system_of_equations, edge_to_variable = constructPuLPFromGraph(G)
-    # for edge, variable in edge_to_variable.items():
-    #     # Warm start all non-ExternalNode edges to 1
-    #     if not isinstance(G.nodes[edge[0]]['object'], ExternalNode) and not isinstance(G.nodes[edge[1]]['object'], ExternalNode):
-    #         variable.setInitialValue(1)
+    G = None
 
-    # There isn't a chosen quantity yet, so add one
-    # The YAML file has one since this is Flow1 compatible, so get it from there
-    system_of_equations = addPulpUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, system_of_equations, yaml_path)
-    
-    print(system_of_equations)
+    # Helper function that solves the current problem (reloads, forms graph, forms equations, solves) with some sources excluded.
+    def solve(do_print=False, excluded_sources=set()):
+        G = constructDisjointGraphFromFlow1Yaml(yaml_path)
+        G = produceConnectedGraphFromDisjoint(G)
+        G = removeIgnorableIngredients(G) # eg water
+        G = addExternalNodes(G, excluded_sources)
+        if do_print:
+            for idx, node in G.nodes.items():
+                print(idx, node)
 
-    seed = 1337 # Choose a seed for reproduceability
-    status = system_of_equations.solve(PULP_CBC_CMD(msg=True, warmStart=True, options = [f'RandomS {seed}']))
-    print(status)
+        # Construct PuLP representation of graph
+        system_of_equations, edge_to_variable = constructPuLPFromGraph(G)
+        # for edge, variable in edge_to_variable.items():
+        #     # Warm start all non-ExternalNode edges to 1
+        #     if not isinstance(G.nodes[edge[0]]['object'], ExternalNode) and not isinstance(G.nodes[edge[1]]['object'], ExternalNode):
+        #         variable.setInitialValue(1)
+
+        # There isn't a chosen quantity yet, so add one
+        # The YAML file has one since this is Flow1 compatible, so get it from there
+        system_of_equations = addPulpUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, system_of_equations, yaml_path)
+
+        if do_print:
+            print(system_of_equations)
+
+        seed = 1337 # Choose a seed for reproduceability
+
+        status = system_of_equations.solve(PULP_CBC_CMD(msg=do_print, warmStart=True, options = [f'RandomS {seed}']))
+        if do_print:
+            print(status)
+
+        return G, status, edge_to_variable
+
+    # A crude function that analyses the solved variables and counts how many are nonzero - i.e. not redundant.
+    def count_used_variables(edge_to_variable):
+        eps = 1e-6
+        c = 0
+        for edge, var in edge_to_variable.items():
+            if abs(var.value()) < eps:
+                c += 1
+        return len(edge_to_variable) - c
+
+    # Sometimes illformed models can return variables that are None, we need to reject those.
+    def is_any_variable_none(edge_to_variable):
+        for edge, var in edge_to_variable.items():
+            if var.value() is None:
+                return True
+        return False
+
+    # This can definitely be done better, computed in batch for all, etc.
+    # But this works. Returns the amount of the given resource that's sources from an external node. We need to know if it's non-zero.
+    def get_source_usage(G, source_name, edge_to_variable):
+        usage = 0
+        for ingnode_idx, node in list(G.nodes.items()):
+            nobj = node['object']
+            if isinstance(nobj, IngredientNode):
+                if nobj.name == source_name:
+                    in_edges = G.in_edges(ingnode_idx)
+                    for in_edge in in_edges:
+                        # Source
+                        parent_obj = G.nodes[in_edge[0]]['object']
+                        if isinstance(parent_obj, ExternalNode):
+                            usage += edge_to_variable[in_edge].value()
+
+        return usage
+
+    # Initial solution with all edges.
+    G, status, edge_to_variable = solve(True)
+
+    # If success, we try to iteratively remove some sources, as long as we can,
+    # hoping that we will arrive at a solution that utilizes the whole production chain
+    # and doesn't just source the final ingredients.
+    if status == 1:
+        # Identify all sources in the graph. We will be trying to remove them.
+        source_names = set()
+        for idx, node in G.nodes.items():
+            nobj = node['object']
+            if isinstance(nobj, IngredientNode):
+                source_names.add(nobj.name)
+
+        # Initially we don't exclude anything.
+        excluded_sources = set()
+
+        while True:
+            # Redundant on first iteration, but whatever.
+            G, status, edge_to_variable = solve(True, excluded_sources)
+
+            # We loop infinitely until no more changes to the graph can be made.
+            # The algorithm is guaranteed to halt because there is a finite amount
+            # of edges to remove.
+            any_change = False
+            for source_name in source_names:
+                # Only attempt removal of sources that are currently in use.
+                # Otherwise we could potentially remove a useful source.
+                if get_source_usage(G, source_name, edge_to_variable) < 1e-6:
+                    continue
+
+                # Speculatively exclude the source
+                excluded_sources.add(source_name)
+                # And compute the new graph, with this source excluded (and all previous exclusions too).
+                new_G, new_status, new_edge_to_variable = solve(False, excluded_sources)
+
+                if new_status != 1 or is_any_variable_none(new_edge_to_variable):
+                    # If there is no solution we restore the previous excluded_sources and try the next source
+                    excluded_sources.remove(source_name)
+                else:
+                    # If there is a solution then we can safely remove the source, as it's not essential.
+                    any_change = True
+
+                    # Remove the source from the list as we don't need to check it again.
+                    source_names.remove(source_name)
+
+                    print(f'Excluded {source_name}.')
+
+                    # We have to redo the iteration as the source_names set changed while we're iterating it.
+                    break
+
+            if not any_change:
+                break
+
+        print(f'Excluded sources: {excluded_sources}.')
+        G, status, edge_to_variable = solve(True, excluded_sources)
 
     G = pruneZeroEdges(G, edge_to_variable)
 

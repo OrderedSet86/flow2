@@ -65,21 +65,47 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
                 sum([edge_to_variable[in_edge] for in_edge in in_edges])
                 +
                 sum([-edge_to_variable[out_edge] for out_edge in out_edges])
-                >=
+                ==
                 0
             )
 
             # Add connected ExternalNodes to objective function
+            has_non_external_sources = False
+            for in_edge in in_edges:
+                # Source
+                parent_obj = G.nodes[in_edge[0]]['object']
+                if not isinstance(parent_obj, ExternalNode):
+                    has_non_external_sources = True
+                    break
+
+            # If the source is the only way to get the given ingredient then we assign a smaller weight,
+            # because we only want to prevent sourcing products that can be made internally.
+            source_coeff = 1e9 if has_non_external_sources else 1e3
+
             for in_edge in in_edges:
                 # Source
                 parent_obj = G.nodes[in_edge[0]]['object']
                 if isinstance(parent_obj, ExternalNode):
-                    objective_function += 10000000* edge_to_variable[in_edge]
+                    objective_function += source_coeff * edge_to_variable[in_edge]
+
+
+            has_non_external_sinks = False
+            for out_edge in out_edges:
+                # Sink
+                child_obj = G.nodes[out_edge[1]]['object']
+                if not isinstance(child_obj, ExternalNode):
+                    has_non_external_sinks = True
+                    break
+
+            # If the sink is the only way to get rid of something (can't be used in any recipe)
+            # then we reduce the cost of such sink. Similar logic as for sources.
+            sink_coeff = 1e9 if has_non_external_sinks else 1e3
+
             for out_edge in out_edges:
                 # Sink
                 child_obj = G.nodes[out_edge[1]]['object']
                 if isinstance(child_obj, ExternalNode):
-                    objective_function += 10000000* edge_to_variable[out_edge]
+                    objective_function += sink_coeff* edge_to_variable[out_edge]
     
     # Add maximum flow objective function
     # This is the best as it minimizes the amount of external ingredients used

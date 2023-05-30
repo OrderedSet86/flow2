@@ -3,7 +3,7 @@ import networkx as nx
 from src.data.basicTypes import EdgeData, ExternalNode, IngredientNode, MachineNode
 
 
-def addExternalNodes(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
+def addExternalNodes(G: nx.MultiDiGraph, excluded_sources=set()) -> nx.MultiDiGraph:
     # For each ingredient, add an external source and sink
     # (Mutates existing graph)
 
@@ -18,9 +18,10 @@ def addExternalNodes(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
             out_edges = G.out_edges(ingnode_idx)
 
             # Source
-            G.add_node(highest_node_idx, object=ExternalNode(f'[Source] {nobj.name}', {}, {nobj.name: 1000}, 0, 1))
-            G.add_edge(highest_node_idx, ingnode_idx, object=EdgeData(nobj.name, 1000))
-            highest_node_idx += 1
+            if nobj.name not in excluded_sources:
+                G.add_node(highest_node_idx, object=ExternalNode(f'[Source] {nobj.name}', {}, {nobj.name: 1000}, 0, 1))
+                G.add_edge(highest_node_idx, ingnode_idx, object=EdgeData(nobj.name, 1000))
+                highest_node_idx += 1
 
             # Sink
             G.add_node(highest_node_idx, object=ExternalNode(f'[Sink] {nobj.name}', {nobj.name: 1000}, {}, 0, 1))

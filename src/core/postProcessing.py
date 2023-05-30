@@ -15,6 +15,10 @@ def pruneZeroEdges(G: nx.MultiDiGraph, edge_to_variable) -> nx.MultiDiGraph:
                 if isinstance(G.nodes[end_idx]['object'], ExternalNode):
                     G.remove_node(end_idx)
 
+    return G
+    # IMPORTANT NOTE: Omit the last step for clarity
+
+
     # Intelligently remove redundant ExternalNodes
     # eg. if an ExternalNode is pointing to an IngredientNode, and the ExternalNode is not the only source of that,
     #     then remove the ExternalNode
