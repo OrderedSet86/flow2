@@ -65,7 +65,7 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
                 sum([edge_to_variable[in_edge] for in_edge in in_edges])
                 +
                 sum([-edge_to_variable[out_edge] for out_edge in out_edges])
-                ==
+                >=
                 0
             )
 
