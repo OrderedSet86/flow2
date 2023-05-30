@@ -34,13 +34,13 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
                     # Look up relationship in Machine node
                     # Need to do this kind of indexing because MultiDiGraph edges can look like [(from_node, to_node, which_one)]
                     if len(in_edge) == 3:
-                        in_edge_ingredient = G.edges[*in_edge]['object'].name
+                        in_edge_ingredient = G.edges[in_edge[0], in_edge[1], in_edge[2]]['object'].name
                     else:
-                        in_edge_ingredient = G.edges[*in_edge, 0]['object'].name
+                        in_edge_ingredient = G.edges[in_edge[0], in_edge[1], 0]['object'].name
                     if len(out_edge) == 3:
-                        out_edge_ingredient = G.edges[*out_edge]['object'].name
+                        out_edge_ingredient = G.edges[out_edge[0], out_edge[1], out_edge[2]]['object'].name
                     else:
-                        out_edge_ingredient = G.edges[*out_edge, 0]['object'].name
+                        out_edge_ingredient = G.edges[out_edge[0], out_edge[1], 0]['object'].name
                     constant_multiple = nobj.O[out_edge_ingredient] / nobj.I[in_edge_ingredient]
 
                     # Add to problem definition
@@ -95,11 +95,7 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
     return problem, edge_to_variable
 
 
-def constructSymPyFromGraph(G: nx.MultiDiGraph, construct_slack: bool=True) -> \
-    tuple[
-        list[sympy.core.add.Add], # System of equations
-        dict[tuple[int, int], sympy.core.symbol.Symbol] # Edge to variable mapping
-    ]:
+def constructSymPyFromGraph(G: nx.MultiDiGraph, construct_slack: bool=True):
     system_of_equations = []
     variable_index = 0
     edge_to_variable = {}
@@ -124,13 +120,13 @@ def constructSymPyFromGraph(G: nx.MultiDiGraph, construct_slack: bool=True) -> \
                     # Look up relationship in Machine node
                     # Need to do this kind of indexing because MultiDiGraph edges can look like [(from_node, to_node, which_one)]
                     if len(in_edge) == 3:
-                        in_edge_ingredient = G.edges[*in_edge]['object'].name
+                        in_edge_ingredient = G.edges[in_edge[0], in_edge[1], in_edge[2]]['object'].name
                     else:
-                        in_edge_ingredient = G.edges[*in_edge, 0]['object'].name
+                        in_edge_ingredient = G.edges[in_edge[0], in_edge[1], 0]['object'].name
                     if len(out_edge) == 3:
-                        out_edge_ingredient = G.edges[*out_edge]['object'].name
+                        out_edge_ingredient = G.edges[out_edge[0], out_edge[1], out_edge[2]]['object'].name
                     else:
-                        out_edge_ingredient = G.edges[*out_edge, 0]['object'].name
+                        out_edge_ingredient = G.edges[out_edge[0], out_edge[1], 0]['object'].name
                     constant_multiple = sympy.Rational(nobj.O[out_edge_ingredient], nobj.I[in_edge_ingredient])
 
                     # Add to problem definition

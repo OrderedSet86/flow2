@@ -4,8 +4,8 @@ from dataclasses import dataclass
 @dataclass
 class MachineNode:
     machine: str
-    I: dict[str, int]
-    O: dict[str, int]
+    I: dict
+    O: dict
     eut: int
     dur_ticks: int
 

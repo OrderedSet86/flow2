@@ -11,7 +11,7 @@ from src.data.basicTypes import IngredientNode, MachineNode
 
 def addPulpUserChosenQuantityFromFlow1Yaml(
         G: MultiDiGraph,
-        edge_to_variable: dict[tuple, LpVariable],
+        edge_to_variable,
         problem: LpProblem,
         yaml_path: Union[str, Path]
     ):
@@ -79,8 +79,8 @@ def addPulpUserChosenQuantityFromFlow1Yaml(
 
 def addSympyUserChosenQuantityFromFlow1Yaml(
         G: MultiDiGraph,
-        edge_to_variable: dict[tuple[int, int], sympy.core.symbol.Symbol],
-        system_of_equations: list[sympy.core.add.Add],
+        edge_to_variable,
+        system_of_equations,
         yaml_path: Union[str, Path]
     ):
     with open(yaml_path, 'r') as f:

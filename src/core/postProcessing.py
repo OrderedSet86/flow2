@@ -4,7 +4,7 @@ from pulp import LpVariable
 from src.data.basicTypes import ExternalNode
 
 
-def pruneZeroEdges(G: nx.MultiDiGraph, edge_to_variable: dict[tuple, LpVariable]) -> nx.MultiDiGraph:
+def pruneZeroEdges(G: nx.MultiDiGraph, edge_to_variable) -> nx.MultiDiGraph:
     # Remove edges and associated ExternalNodes with zero flow
     for idx, edge in list(G.edges.items()):
         if edge_to_variable[idx[:2]].value() == 0:
