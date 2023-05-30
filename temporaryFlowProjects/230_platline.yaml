@@ -90,7 +90,7 @@
   I:
     sulfur dust: 2
     potassium dust: 2
-    '[input] oxygen': 7000
+    oxygen: 7000
   O:
     potassium disulfate dust: 11
   eut: 90
@@ -417,49 +417,49 @@
 #   eut: 30
 #   dur: 15
 #   group: ruthenium
-# - m: large chemical reactor
-#   tier: EV
-#   I:
-#     palladium enriched ammonia: 2800
-#     '[palladium] ammonia': 6200
-#   O:
-#     reprecipitated palladium dust: 2
-#   eut: 30
-#   dur: 112.5
-#   group: palladium
-# - m: large chemical reactor
-#   tier: EV
-#   I:
-#     formic acid: 4000
-#     reprecipitated palladium dust: 4
-#   O:
-#     palladium dust: 2
-#     '[recycle] ammonia': 4000
-#     ethylene: 1000
-#   eut: 30
-#   dur: 12.5
-#   group: palladium
-# - m: large chemical reactor
-#   tier: HV
-#   I:
-#     sulfuric acid: 1000
-#     sodium formate: 2000
-#   O:
-#     sodium sulfate dust: 7
-#     formic acid: 2000
-#   eut: 30
-#   dur: 0.75
-#   group: palladium
-# - m: large chemical reactor
-#   tier: HV
-#   I:
-#     carbon monoxide: 1000
-#     sodium hydroxide dust: 3
-#   O:
-#     sodium formate: 1000
-#   eut: 30
-#   dur: 0.75
-#   group: palladium
+- m: large chemical reactor
+  tier: EV
+  I:
+    palladium enriched ammonia: 2800
+    ammonia: 6200
+  O:
+    reprecipitated palladium dust: 2
+  eut: 30
+  dur: 112.5
+  group: palladium
+- m: large chemical reactor
+  tier: EV
+  I:
+    formic acid: 4000
+    reprecipitated palladium dust: 4
+  O:
+    palladium dust: 2
+    ammonia: 4000
+    ethylene: 1000
+  eut: 30
+  dur: 12.5
+  group: palladium
+- m: large chemical reactor
+  tier: HV
+  I:
+    sulfuric acid: 1000
+    sodium formate: 2000
+  O:
+    sodium sulfate dust: 7
+    formic acid: 2000
+  eut: 30
+  dur: 0.75
+  group: palladium
+- m: large chemical reactor
+  tier: HV
+  I:
+    carbon monoxide: 1000
+    sodium hydroxide dust: 3
+  O:
+    sodium formate: 1000
+  eut: 30
+  dur: 0.75
+  group: palladium
 # - m: large chemical reactor
 #   tier: HV
 #   I:
@@ -480,16 +480,16 @@
 #   eut: 30
 #   dur: 1.5
 #   group: ruthenium
-# - m: large chemical reactor
-#   tier: HV
-#   I:
-#     carbon dust: 1
-#     oxygen: 1000
-#   O:
-#     carbon monoxide: 1000
-#   eut: 7
-#   dur: 2
-#   group: palladium
+- m: large chemical reactor
+  tier: HV
+  I:
+    carbon dust: 1
+    oxygen: 1000
+  O:
+    carbon monoxide: 1000
+  eut: 7
+  dur: 2
+  group: palladium
 # - m: centrifuge
 #   tier: LV
 #   I:
@@ -499,37 +499,37 @@
 #   eut: 10
 #   dur: 2.25
 #   group: iridium
-# - m: large chemical reactor
-#   tier: HV
-#   I:
-#     sodium sulfate dust: 7
-#     '[source] hydrogen': 2000
-#   O:
-#     '[recycle] sulfuric acid': 1000
-#     '[recycle] sodium dust': 2
-#   eut: 30
-#   dur: 1.5
-#   group: palladium
-# - m: large chemical reactor
-#   tier: HV
-#   I:
-#     '[source] sodium dust': 1
-#   O:
-#     sodium hydroxide dust: 3
-#     hydrogen: 1000
-#   eut: 30
-#   dur: 10
-#   group: palladium
-# - m: large chemical reactor
-#   tier: EV
-#   I:
-#     nitrogen: 1000
-#     '[source] hydrogen': 3000
-#   O:
-#     '[palladium] ammonia': 1000
-#   eut: 384
-#   dur: 16
-#   group: palladium
+- m: large chemical reactor
+  tier: HV
+  I:
+    sodium sulfate dust: 7
+    hydrogen: 2000
+  O:
+    sulfuric acid: 1000
+    sodium dust: 2
+  eut: 30
+  dur: 1.5
+  group: palladium
+- m: large chemical reactor
+  tier: HV
+  I:
+    sodium dust: 1
+  O:
+    sodium hydroxide dust: 3
+    hydrogen: 1000
+  eut: 30
+  dur: 10
+  group: palladium
+- m: large chemical reactor
+  tier: EV
+  I:
+    nitrogen: 1000
+    hydrogen: 3000
+  O:
+    ammonia: 1000
+  eut: 384
+  dur: 16
+  group: palladium
 # - m: large chemical reactor
 #   tier: HV
 #   I:

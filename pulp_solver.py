@@ -128,6 +128,8 @@ if __name__ == '__main__':
             if isinstance(nobj, IngredientNode):
                 source_names.append(nobj.name)
 
+        last_num_used_variables = count_used_variables(edge_to_variable)
+
         # We want to check the sources that have a high coefficient first.
         # These are the ingredients that can also be produced internally.
         source_names.sort(key=lambda x: -get_source_coeff(G, x))
@@ -159,16 +161,22 @@ if __name__ == '__main__':
                     # If there is no solution we restore the previous excluded_sources and try the next source
                     excluded_sources.remove(source_name)
                 else:
-                    # If there is a solution then we can safely remove the source, as it's not essential.
-                    any_change = True
+                    num_used_variables = count_used_variables(new_edge_to_variable)
+                    if num_used_variables > last_num_used_variables:
+                        last_num_used_variables = num_used_variables
 
-                    # Remove the source from the list as we don't need to check it again.
-                    source_names.remove(source_name)
+                        # If there is a solution then we can safely remove the source, as it's not essential.
+                        any_change = True
 
-                    print(f'Excluded {source_name}.')
+                        # Remove the source from the list as we don't need to check it again.
+                        source_names.remove(source_name)
 
-                    # We have to redo the iteration as the source_names set changed while we're iterating it.
-                    break
+                        print(f'Excluded {source_name}.')
+
+                        # We have to redo the iteration as the source_names set changed while we're iterating it.
+                        break
+                    else:
+                        excluded_sources.remove(source_name)
 
             if not any_change:
                 break
