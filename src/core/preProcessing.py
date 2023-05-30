@@ -12,12 +12,10 @@ def addExternalNodes(G: nx.MultiDiGraph) -> nx.MultiDiGraph:
     for ingnode_idx, node in list(G.nodes.items()):
         nobj = node['object']
         if isinstance(nobj, IngredientNode):
-            # Do not add if:
-            # 1. Ingredient is already a source or sink (this will give inaccurate objective information for the LP problem)
+            # All nodes need corresponding sink/source connections.
+            # Whether they are used or not is governed by the solver and the objective function.
             in_edges = G.in_edges(ingnode_idx)
             out_edges = G.out_edges(ingnode_idx)
-            if len(in_edges) == 0 or len(out_edges) == 0:
-                continue
 
             # Source
             G.add_node(highest_node_idx, object=ExternalNode(f'[Source] {nobj.name}', {}, {nobj.name: 1000}, 0, 1))
