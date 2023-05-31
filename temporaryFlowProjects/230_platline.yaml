@@ -212,17 +212,17 @@
 #   eut: 30
 #   dur: 16
 #   group: aqua regia recycling
-# - m: large chemical reactor
-#   tier: HV
-#   I:
-#     rhodium sulfate: 39600
-#   O:
-#     rhodium sulfate solution: 39600
-#     molten potassium: 7200
-#     leach residue dust: 4
-#   eut: 30
-#   dur: 60
-#   group: rare element prep
+- m: large chemical reactor
+  tier: HV
+  I:
+    rhodium sulfate: 39600
+  O:
+    rhodium sulfate solution: 39600
+    molten potassium: 7200
+    leach residue dust: 4
+  eut: 30
+  dur: 60
+  group: rare element prep
 # - m: large chemical reactor
 #   tier: HV
 #   I:
@@ -244,24 +244,24 @@
 #   eut: 90
 #   dur: 1.3
 #   group: rhodium
-# - m: fluid solidifier
-#   tier: HV
-#   I:
-#     molten potassium: 144
-#   O:
-#     potassium ingot: 1
-#   eut: 7
-#   dur: 1.6
-#   group: K2S2O7 recycling
-# - m: macerator
-#   tier: HV
-#   I:
-#     potassium ingot: 1
-#   O:
-#     potassium dust: 1
-#   eut: 4
-#   dur: 1.95
-#   group: K2S2O7 recycling
+- m: fluid solidifier
+  tier: HV
+  I:
+    molten potassium: 144
+  O:
+    potassium ingot: 1
+  eut: 7
+  dur: 1.6
+  group: K2S2O7 recycling
+- m: macerator
+  tier: HV
+  I:
+    potassium ingot: 1
+  O:
+    potassium dust: 1
+  eut: 4
+  dur: 1.95
+  group: K2S2O7 recycling
 # - m: distillation tower
 #   tier: IV
 #   I:
@@ -417,15 +417,45 @@
 #   eut: 30
 #   dur: 15
 #   group: ruthenium
+# - m: large chemical reactor
+#   tier: EV
+#   I:
+#     palladium enriched ammonia: 2800
+#     ammonia: 6200
+#   O:
+#     reprecipitated palladium dust: 2
+#   eut: 30
+#   dur: 112.5
+#   group: palladium
 - m: large chemical reactor
   tier: EV
   I:
-    palladium enriched ammonia: 2800
-    ammonia: 6200
+    palladium metallic powder dust: 9
+    palladium enriched ammonia: 9000
   O:
+    palladium salt dust: 16
     reprecipitated palladium dust: 2
   eut: 30
   dur: 112.5
+  group: palladium
+- m: sifter
+  tier: HV
+  I:
+    palladium salt dust: 1
+  O:
+    palladium metallic powder dust: 0.95
+  eut: 30
+  dur: 30
+  group: palladium
+- m: large chemical reactor
+  tier: HV
+  I:
+    palladium metallic powder dust: 1
+    ammonia: 1000
+  O:
+    palladium enriched ammonia: 1000
+  eut: 30
+  dur: 12.5
   group: palladium
 - m: large chemical reactor
   tier: EV
@@ -514,6 +544,7 @@
   tier: HV
   I:
     sodium dust: 1
+    water: 1000
   O:
     sodium hydroxide dust: 3
     hydrogen: 1000
@@ -671,3 +702,12 @@
 #   eut: 90
 #   dur: 19.6
 #   group: rhodium
+# - m: electrolyzer
+#   tier: HV
+#   I:
+#     methane: 1000
+#   O:
+#     carbon dust: 1
+#     hydrogen: 4000
+#   eut: 60
+#   dur: 4

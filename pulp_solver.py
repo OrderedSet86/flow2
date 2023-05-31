@@ -15,7 +15,7 @@ from src.data.basicTypes import ExternalNode, IngredientNode, MachineNode
 if __name__ == '__main__':
     # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
     # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
-    yaml_path = Path('temporaryFlowProjects/230_platline.yaml')
+    yaml_path = Path('temporaryFlowProjects/palladium_line.yaml')
 
     G = None
 
