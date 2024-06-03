@@ -109,6 +109,30 @@ if __name__ == '__main__':
             print(f's{idx} = {eq}')
 
     # Add source/sink nodes based on slack variables
+    node_idx = max(G.nodes.keys()) + 1
+    for idx, node in list(G.nodes.items()):
+        nobj = node['object']
+        if isinstance(nobj, IngredientNode):
+            if nobj.associated_slack_variable is not None:
+                slack_value = res.args[0][sympyVarToIndex(nobj.associated_slack_variable)]
+                if isinstance(slack_value, sympy.core.numbers.Number) and slack_value != 0:
+                    # Add source or sink node
+                    if slack_value > 0:
+                        # Source
+                        source_name = f'[Source] {nobj.name}'
+                        node_name = node_idx
+                        G.add_node(len(G.nodes), object=ExternalNode(source_name, {}, {}, 0, 1))
+                        G.add_edge(node_name, idx, object=None)
+                        edge_to_variable[(node_name, idx)] = nobj.associated_slack_variable
+                    elif slack_value < 0:
+                        # Sink
+                        sink_name = f'[Sink] {nobj.name}'
+                        node_name = node_idx
+                        G.add_node(len(G.nodes), object=ExternalNode(sink_name, {}, {}, 0, 1))
+                        G.add_edge(idx, node_name, object=None)
+                        edge_to_variable[(idx, node_name)] = nobj.associated_slack_variable
+                    node_idx += 1
+
     # node_idx = max(G.nodes.keys()) + 1
     # for idx, node in list(G.nodes.items()):
     #     nobj = node['object']
@@ -165,4 +189,4 @@ if __name__ == '__main__':
         edge['fontname'] = 'arial'
 
     ag = nx.nx_agraph.to_agraph(G)
-    ag.draw('proto.png', prog='dot')
+    ag.draw('proto.pdf', prog='dot')

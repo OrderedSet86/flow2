@@ -21,7 +21,7 @@ def constructPuLPFromGraph(G: nx.MultiDiGraph) -> LpProblem:
 
             for edge_list in [in_edges, out_edges]:
                 for edge in edge_list:
-                    edge_to_variable[edge] = LpVariable(f'x{variable_index}', lowBound=0, cat='Continuous')
+                    edge_to_variable[edge] = LpVariable(f's{variable_index}', lowBound=0, cat='Continuous')
                     variable_index += 1
             
             if len(in_edges) == 0 or len(out_edges) == 0:
@@ -135,7 +135,7 @@ def constructSymPyFromGraph(G: nx.MultiDiGraph, construct_slack: bool=True):
 
             for edge_list in [in_edges, out_edges]:
                 for edge in edge_list:
-                    edge_to_variable[edge] = sympy.symbols(f'x{variable_index}', positive=True, real=True)
+                    edge_to_variable[edge] = sympy.symbols(f's{variable_index}', positive=True, real=True)
                     variable_index += 1
             
             if len(in_edges) == 0 or len(out_edges) == 0:
