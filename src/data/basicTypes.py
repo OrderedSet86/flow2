@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+from typing import Any, Optional
+
 
 @dataclass
 class MachineNode:
@@ -16,6 +18,8 @@ class IngredientNode:
     # Only used by Ingredients directly connected to machines
     base_direction: str
     associated_machine_index: int
+
+    associated_slack_variable: Any = None # FIXME: This is sympy symbol
 
 @dataclass
 class EdgeData:

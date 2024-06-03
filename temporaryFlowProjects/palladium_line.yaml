@@ -68,6 +68,10 @@
   dur: 112.5
   group: platinum
 
-# - v2: true
-#   external_constraints:
-#     reprecipitated palladium dust: 0
+- v2_node_type: no_source
+  no_source:
+    - reprecipitated palladium dust
+    - palladium metallic powder dust
+    - palladium salt dust
+    - palladium enriched ammonia
+    - platinum concentrate

@@ -7,6 +7,7 @@ import sympy
 from src.core.addUserLocking import addSympyUserChosenQuantityFromFlow1Yaml
 from src.core.connectGraph import produceConnectedGraphFromDisjoint
 from src.core.flow1Compat import constructDisjointGraphFromFlow1Yaml
+from src.core.flow2Syntax import applyV2UserOptions
 from src.core.graphToEquations import constructSymPyFromGraph
 from src.core.postProcessing import pruneZeroEdges
 from src.core.preProcessing import addExternalNodes, removeIgnorableIngredients
@@ -34,19 +35,21 @@ if __name__ == '__main__':
     system_of_equations = addSympyUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, system_of_equations, yaml_path)
     all_variables = list(edge_to_variable.values()) + list(ingredient_to_slack_variable.values())
 
-    # TEMPORARY
-    if yaml_path == Path('temporaryFlowProjects/palladium_line.yaml'):
-        no_external_input = [
-            'reprecipitated palladium dust',
-            'palladium metallic powder dust',
-            'palladium salt dust',
-            'palladium enriched ammonia',
-            'platinum concentrate',
-        ]
-        for ing in no_external_input:
-            system_of_equations.append(
-                ingredient_to_slack_variable[ing] # = 0
-            )
+    system_of_equations = applyV2UserOptions(G, edge_to_variable, system_of_equations, yaml_path)
+
+    # # TEMPORARY
+    # if yaml_path == Path('temporaryFlowProjects/palladium_line.yaml'):
+    #     no_external_input = [
+    #         'reprecipitated palladium dust',
+    #         'palladium metallic powder dust',
+    #         'palladium salt dust',
+    #         'palladium enriched ammonia',
+    #         'platinum concentrate',
+    #     ]
+    #     for ing in no_external_input:
+    #         system_of_equations.append(
+    #             ingredient_to_slack_variable[ing] # = 0
+    #         )
 
     # Compute how over or underdetermined the system is
     # Can't just compare number of equations to number of variables because some equations are linear combinations of others

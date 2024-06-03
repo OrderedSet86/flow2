@@ -19,6 +19,11 @@ def constructDisjointGraphFromFlow1Yaml(yaml_path: Union[str, Path], ) -> nx.Mul
         # Add machine nodes
         machine_node_id = node_id
         relevant_attrs = ['m', 'I', 'O', 'eut', 'dur']
+
+        if not all([x in machine_dict for x in relevant_attrs]):
+            # v2 style nodes
+            continue
+
         construction_list = [machine_dict[x] for x in relevant_attrs]
         G.add_node(node_id, object=MachineNode(*construction_list))
         node_id += 1

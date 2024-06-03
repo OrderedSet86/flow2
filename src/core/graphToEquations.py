@@ -176,6 +176,7 @@ def constructSymPyFromGraph(G: nx.MultiDiGraph, construct_slack: bool=True):
             if construct_slack:
                 slack_variable = sympy.symbols(f's{variable_index}', real=True)
                 ingredient_to_slack_variable[nobj.name] = slack_variable
+                nobj.associated_slack_variable = slack_variable
                 variable_index += 1
 
             # Total I/O for ingredient

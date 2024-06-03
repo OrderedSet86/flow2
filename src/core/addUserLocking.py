@@ -104,6 +104,11 @@ def addSympyUserChosenQuantityFromFlow1Yaml(
 
     # Add locking equation to LpProblem
     for machine_index, machine_dict in enumerate(conf):
+        machine_attrs = ['m', 'I', 'O', 'eut', 'dur']
+        if not all([x in machine_dict for x in machine_attrs]):
+            # v2 style nodes
+            continue
+
         node_idx = machine_index_to_node_index[machine_index]
         nobj = G.nodes[node_idx]['object']
         if 'number' in machine_dict:
