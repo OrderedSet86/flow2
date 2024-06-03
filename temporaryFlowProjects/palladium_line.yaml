@@ -56,3 +56,7 @@
   eut: 240
   dur: 70
   group: platinum
+
+# - v2: true
+#   external_constraints:
+#     reprecipitated palladium dust: 0

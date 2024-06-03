@@ -40,6 +40,8 @@ if __name__ == '__main__':
         # The YAML file has one since this is Flow1 compatible, so get it from there
         system_of_equations = addPulpUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, system_of_equations, yaml_path)
 
+        # Add known constraint equations
+
         if do_print:
             print(system_of_equations)
 
