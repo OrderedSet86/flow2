@@ -11,6 +11,7 @@ from src.core.graphToEquations import constructSymPyFromGraph
 from src.core.postProcessing import pruneZeroEdges
 from src.core.preProcessing import addExternalNodes, removeIgnorableIngredients
 from src.data.basicTypes import ExternalNode, IngredientNode, MachineNode
+from v1_utils import userAccurate
 
 
 def sympyVarToIndex(var):
@@ -20,7 +21,7 @@ def sympyVarToIndex(var):
 if __name__ == '__main__':
     # flow_projects_path = Path('~/Dropbox/OrderedSetCode/game-optimization/minecraft/flow/projects').expanduser()
     # yaml_path = flow_projects_path / 'power/oil/light_fuel_hydrogen_loop.yaml'
-    yaml_path = Path('temporaryFlowProjects/twoslack.yaml')
+    yaml_path = Path('temporaryFlowProjects/palladium_line.yaml')
 
     G = constructDisjointGraphFromFlow1Yaml(yaml_path)
     G = produceConnectedGraphFromDisjoint(G)
@@ -33,28 +34,42 @@ if __name__ == '__main__':
     system_of_equations = addSympyUserChosenQuantityFromFlow1Yaml(G, edge_to_variable, system_of_equations, yaml_path)
     all_variables = list(edge_to_variable.values()) + list(ingredient_to_slack_variable.values())
 
+    # TEMPORARY
+    if yaml_path == Path('temporaryFlowProjects/palladium_line.yaml'):
+        no_external_input = [
+            'reprecipitated palladium dust',
+            'palladium metallic powder dust',
+            'palladium salt dust',
+            'palladium enriched ammonia',
+            'platinum concentrate',
+        ]
+        for ing in no_external_input:
+            system_of_equations.append(
+                ingredient_to_slack_variable[ing] # = 0
+            )
+
     # Compute how over or underdetermined the system is
     # Can't just compare number of equations to number of variables because some equations are linear combinations of others
     # So we need to compute the rank of the linear system of equation's matrix
-    def constructMatrix(system_of_equations):
-        matrix = []
-        for eq in system_of_equations:
-            row = []
-            for var in all_variables:
-                row.append(float(eq.coeff(var)))
+    # def constructMatrix(system_of_equations):
+    #     matrix = []
+    #     for eq in system_of_equations:
+    #         row = []
+    #         for var in all_variables:
+    #             row.append(float(eq.coeff(var)))
             
-            # Check for constant term
-            constant = eq.func(*[term for term in eq.args if not term.free_symbols])
-            row.append(float(constant))
+    #         # Check for constant term
+    #         constant = eq.func(*[term for term in eq.args if not term.free_symbols])
+    #         row.append(float(constant))
 
-            matrix.append(row)
-        return np.array(matrix)
+    #         matrix.append(row)
+    #     return np.array(matrix)
 
-    mat = constructMatrix(system_of_equations)
-    rank = np.linalg.matrix_rank(mat)
-    print(mat)
-    print(f'Rank of system: {rank}')
-    print(f'Number of variables: {len(all_variables)}')
+    # mat = constructMatrix(system_of_equations)
+    # rank = np.linalg.matrix_rank(mat)
+    # print(mat)
+    # print(f'Rank of system: {rank}')
+    # print(f'Number of variables: {len(all_variables)}')
     # if rank < len(all_variables):
     #     raise NotImplementedError('System is underdetermined')
 
@@ -137,7 +152,12 @@ if __name__ == '__main__':
         index_idx = idx[:2]
         label_parts = [str(edge_to_variable[index_idx])]
         if len(res) > 0:
-            label_parts.append(f'{res.args[0][sympyVarToIndex(edge_to_variable[index_idx])]}')
+            raw_equation_on_edge = res.args[0][sympyVarToIndex(edge_to_variable[index_idx])]
+            if isinstance(raw_equation_on_edge, (sympy.core.numbers.Integer, sympy.core.numbers.Rational)):
+                raw_equation_on_edge = userAccurate(float(raw_equation_on_edge))
+            # print(type(raw_equation_on_edge), raw_equation_on_edge, round(float(raw_equation_on_edge), 4))
+            equation_on_edge = f'{raw_equation_on_edge}'
+            label_parts.append(equation_on_edge)
         edge['label'] = '\n'.join(label_parts)
         edge['fontname'] = 'arial'
 

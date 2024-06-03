@@ -56,6 +56,17 @@
   eut: 240
   dur: 70
   group: platinum
+- m: large chemical reactor
+  tier: EV
+  I:
+    PMP: 9
+    '[100% recycle] aqua regia': 9000
+  O:
+    platinum residue dust: 1
+    platinum concentrate: 9000
+  eut: 30
+  dur: 112.5
+  group: platinum
 
 # - v2: true
 #   external_constraints:
