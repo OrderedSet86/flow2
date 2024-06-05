@@ -37,20 +37,6 @@ if __name__ == '__main__':
 
     system_of_equations = applyV2UserOptions(G, edge_to_variable, system_of_equations, yaml_path)
 
-    # # TEMPORARY
-    # if yaml_path == Path('temporaryFlowProjects/palladium_line.yaml'):
-    #     no_external_input = [
-    #         'reprecipitated palladium dust',
-    #         'palladium metallic powder dust',
-    #         'palladium salt dust',
-    #         'palladium enriched ammonia',
-    #         'platinum concentrate',
-    #     ]
-    #     for ing in no_external_input:
-    #         system_of_equations.append(
-    #             ingredient_to_slack_variable[ing] # = 0
-    #         )
-
     # Compute how over or underdetermined the system is
     # Can't just compare number of equations to number of variables because some equations are linear combinations of others
     # So we need to compute the rank of the linear system of equation's matrix
@@ -132,26 +118,6 @@ if __name__ == '__main__':
                         G.add_edge(idx, node_name, object=None)
                         edge_to_variable[(idx, node_name)] = sympy.symbols(f'x{node_idx}', positive=True, real=True)
                     node_idx += 1
-
-    # node_idx = max(G.nodes.keys()) + 1
-    # for idx, node in list(G.nodes.items()):
-    #     nobj = node['object']
-    #     if isinstance(nobj, IngredientNode):
-    #         if nobj.name in ingredient_to_slack_variable:
-    #             slack_value = res.args[0][sympyVarToIndex(ingredient_to_slack_variable[nobj.name])]
-
-    #             node_name = node_idx
-    #             if slack_value > 0:
-    #                 machine_name = f'[Source] {nobj.name}'
-    #                 G.add_node(node_name, object=ExternalNode(machine_name, {}, {}, 0, 1))
-    #                 G.add_edge(node_name, idx, object=None)
-    #                 edge_to_variable[(node_name, idx)] = ingredient_to_slack_variable[nobj.name]
-    #             elif slack_value < 0:
-    #                 machine_name = f'[Sink] {nobj.name}'
-    #                 G.add_node(node_name, object=ExternalNode(machine_name, {}, {}, 0, 1))
-    #                 G.add_edge(idx, node_name, object=None)
-    #                 edge_to_variable[(idx, node_name)] = ingredient_to_slack_variable[nobj.name]
-    #             node_idx += 1
 
     # Add label for ease of reading
     for idx, node in G.nodes.items():
