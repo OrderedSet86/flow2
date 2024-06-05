@@ -376,40 +376,259 @@
   eut: 30
   dur: 15
   group: osmium
+- m: mixer
+  tier: HV
+  I:
+    rhodium salt dust: 1
+  O:
+    rhodium salt solution: 200
+  eut: 30
+  dur: 1.5
+  group: rhodium
+- m: large chemical reactor
+  tier: HV
+  I:
+    rhodium salt solution: 1000
+    sodium nitrate dust: 1
+  O:
+    rhodium nitrate: 1
+    salt: 1
+  eut: 30
+  dur: 15
+  group: rhodium
+- m: sifter
+  tier: HV
+  I:
+    rhodium nitrate: 1
+  O:
+    rhodium filter cake dust: 0.95
+  eut: 30
+  dur: 30
+  group: rhodium
+- m: mixer
+  tier: HV
+  I:
+    rhodium filter cake dust: 1
+  O:
+    rhodium filter cake solution: 1000
+  eut: 30
+  dur: 15
+  group: rhodium
+- m: large chemical reactor
+  tier: HV
+  I:
+    rhodium filter cake solution: 1000
+  O:
+    reprecipitated rhodium dust: 1
+  eut: 30
+  dur: 15
+  group: rhodium
+- m: large chemical reactor
+  tier: HV
+  I:
+    reprecipitated rhodium dust: 1
+    hydrochloric acid: 1000
+  O:
+    rhodium dust: 1
+    ammonia: 1000
+    chlorine: 1000
+  eut: 30
+  dur: 15
+  group: rhodium
+- m: large chemical reactor
+  tier: HV
+  I:
+    sodium ruthenate dust: 6
+    chlorine: 3000
+  O:
+    ruthenium tetroxide solution: 9000
+  eut: 30
+  dur: 15
+  group: ruthenium
+- m: oil cracker
+  tier: HV
+  I:
+    steam: 1000
+    ruthenium tetroxide solution: 1000
+  O:
+    hot ruthenium tetroxide solution: 2000
+  eut: 480
+  dur: 7.5
+  group: ruthenium
+- m: distillation tower
+  tier: HV
+  I:
+    hot ruthenium tetroxide solution: 9000
+  O:
+    salt: 6
+    ruthenium tetroxide: 7200
+  eut: 480
+  dur: 75
+  group: ruthenium
+- m: fluid solidifier
+  tier: HV
+  I:
+    ruthenium tetroxide: 1000
+  O:
+    ruthenium tetroxide dust: 1
+  eut: 30
+  dur: 1.65
+  group: ruthenium
+- m: large chemical reactor
+  tier: HV
+  I:
+    hydrochloric acid: 6000
+    ruthenium tetroxide dust: 1
+  O:
+    ruthenium dust: 1
+    chlorine: 6000
+  eut: 30
+  dur: 15
+  group: ruthenium
+- m: large chemical reactor
+  tier: HV
+  I:
+    sulfuric acid: 1000
+    sodium formate: 2000
+  O:
+    sodium sulfate dust: 7
+    formic acid: 2000
+  eut: 30
+  dur: 0.75
+  group: palladium
+- m: large chemical reactor
+  tier: HV
+  I:
+    carbon monoxide: 1000
+    sodium hydroxide dust: 3
+  O:
+    sodium formate: 1000
+  eut: 30
+  dur: 0.75
+  group: palladium
+- m: fluid heater
+  tier: LV
+  I: {}
+  O:
+    steam: 960
+  eut: 30
+  dur: 1.5
+  group: ruthenium
+- m: large chemical reactor
+  tier: HV
+  I:
+    carbon dust: 1
+    oxygen: 1000
+  O:
+    carbon monoxide: 1000
+  eut: 7
+  dur: 2
+  group: palladium
+- m: centrifuge
+  tier: LV
+  I:
+    sludge dust residue dust: 5
+  O:
+    gold dust: 2
+  eut: 10
+  dur: 2.25
+  group: iridium
+- m: large chemical reactor
+  tier: HV
+  I:
+    sodium sulfate dust: 7
+    hydrogen: 2000
+  O:
+    sulfuric acid: 1000
+    sodium dust: 2
+  eut: 30
+  dur: 1.5
+  group: palladium
+- m: large chemical reactor
+  tier: HV
+  I:
+    sodium dust: 1
+  O:
+    sodium hydroxide dust: 3
+    hydrogen: 1000
+  eut: 30
+  dur: 10
+  group: palladium
+- m: large chemical reactor
+  tier: EV
+  I:
+    nitrogen: 1000
+    hydrogen: 3000
+  O:
+    ammonia: 1000
+  eut: 384
+  dur: 16
+  group: palladium
+- m: mixer
+  tier: HV
+  I:
+    salt: 1
+  O:
+    salt water: 250
+  eut: 7
+  dur: 2.5
+  group: rare element prep
+- m: large chemical reactor
+  tier: HV
+  I:
+    nitric acid: 1000
+    sodium dust: 1
+  O:
+    sodium nitrate dust: 5
+    hydrogen: 1000
+  eut: 60
+  dur: 0.4
+  group: rhodium
+- m: large chemical reactor
+  tier: HV
+  I:
+    potassium dust: 1
+    nitric acid: 1000
+  O:
+    saltpeter: 5
+    hydrogen: 1000
+  eut: 30
+  dur: 5
+  group: rare element prep
+- m: large chemical reactor
+  tier: HV
+  I:
+    oxygen: 4000
+    nitrogen: 1000
+    hydrogen: 3000
+  O:
+    nitric acid: 1000
+  eut: 30
+  dur: 16
+  group: rare element prep
+- m: electrolyzer
+  tier: HV
+  I:
+    sulfuric acid: 1000
+  O:
+    hydrogen: 2000
+    sulfur dust: 1
+    oxygen: 4000
+  eut: 90
+  dur: 19.6
+  group: rhodium
 
 
-- v2_node_type: no_source
-  no_source:
-    - reprecipitated palladium dust
-    - palladium metallic powder dust
-    - palladium salt dust
-    - palladium enriched ammonia
-    - platinum concentrate
-    - ammonium chloride
-    - platinum salt dust
-    - refined platinum salt dust
-    - hydrochloric acid
-    - platinum residue dust
-    - leach residue dust
-    - potassium disulfate dust
-    - molten potassium disulfate
-    - rarest metal residue dust
-    - iridium metal residue dust
-    - iridium dioxide dust
-    - acidic iridium solution
-    - calcium chloride dust
-    - calcium chloride
-    - iridium chloride dust
-    - metallic sludge dust residue dust
-    - diluted sulfuric acid
-    - rhodium sulfate
-    - nitric acid
-    - rhodium sulfate solution
-    - zinc sulfate dust
-    - molten potassium
-    - potassium ingot
-    - acidic osmium solution
-    - osmium solution
-    - reprecipitated platinum dust
-    - crude rhodium metal dust
-    - aqua regia
+- v2_node_type: whitelisted_slack_variables
+  whitelisted_slack_variables:
+    - PMP
+    - chlorine
+    - calcium dust
+    - hydrogen
+    - oxygen
+    - nitrogen
+    - carbon dust
+    - potassium dust
+    - sodium dust
+    - salt
+    - sulfur dust

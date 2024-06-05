@@ -1,3 +1,4 @@
+from math import copysign
 from pathlib import Path
 
 import networkx as nx
@@ -87,39 +88,51 @@ if __name__ == '__main__':
     print()
 
     res = sympy.linsolve(system_of_equations, *all_variables)
-    print('=====SOLUTION=====')
-    for idx, eq in enumerate(res.args[0]):
-        if idx < len(edge_to_variable):
-            print(f'x{idx} = {eq}')
-        else:
-            print(f's{idx} = {eq}')
 
-    # Add source/sink nodes based on slack variables
-    node_idx = max(G.nodes.keys()) + 1
-    for idx, node in list(G.nodes.items()):
-        nobj = node['object']
-        if isinstance(nobj, IngredientNode):
-            if nobj.associated_slack_variable is not None:
-                slack_value = res.args[0][sympyVarToIndex(nobj.associated_slack_variable)]
-                if isinstance(slack_value, sympy.core.numbers.Number) and slack_value != 0:
-                    # Add source or sink node
-                    if slack_value > 0:
-                        # Source
-                        source_name = f'[Source] {nobj.name}'
-                        node_name = node_idx
-                        G.add_node(len(G.nodes), object=ExternalNode(source_name, {}, {}, 0, 1))
-                        G.add_edge(node_name, idx, object=None)
-                        edge_to_variable[(node_name, idx)] = sympy.symbols(f'x{node_idx}', positive=True, real=True)
-                    elif slack_value < 0:
-                        # Sink
-                        sink_name = f'[Sink] {nobj.name}'
-                        node_name = node_idx
-                        G.add_node(len(G.nodes), object=ExternalNode(sink_name, {}, {}, 0, 1))
-                        G.add_edge(idx, node_name, object=None)
-                        edge_to_variable[(idx, node_name)] = sympy.symbols(f'x{node_idx}', positive=True, real=True)
-                    node_idx += 1
+    if res == sympy.EmptySet:
+        # TODO: Try doing binary search over subproblems to find problematic equation
+        pass
+
+
+
+    print('=====SOLUTION=====')
+    augmented_solution = None
+    if len(res) > 0:
+        for idx, eq in enumerate(res.args[0]):
+            if idx < len(edge_to_variable):
+                print(f'x{idx} = {eq}')
+            else:
+                print(f's{idx} = {eq}')
+
+        # Add source/sink nodes based on slack variables
+        augmented_solution = list(res.args[0])
+        new_var_index = len(all_variables)
+        for ingredient_node_idx, node in list(G.nodes.items()):
+            nobj = node['object']
+            if isinstance(nobj, IngredientNode):
+                if nobj.associated_slack_variable is not None:
+                    slack_value = res.args[0][sympyVarToIndex(nobj.associated_slack_variable)]
+                    if isinstance(slack_value, sympy.core.numbers.Number) and slack_value != 0:
+                        # Add source or sink node
+                        if slack_value > 0:
+                            # Source
+                            source_name = f'[Source] {nobj.name}'
+                            G.add_node(new_var_index, object=ExternalNode(source_name, {}, {}, 0, 1))
+                            G.add_edge(new_var_index, ingredient_node_idx, object=None)
+                            edge_to_variable[(new_var_index, ingredient_node_idx)] = sympy.symbols(f'e{new_var_index}', positive=True, real=True)
+                        elif slack_value < 0:
+                            # Sink
+                            sink_name = f'[Sink] {nobj.name}'
+                            G.add_node(new_var_index, object=ExternalNode(sink_name, {}, {}, 0, 1))
+                            G.add_edge(ingredient_node_idx, new_var_index, object=None)
+                            edge_to_variable[(ingredient_node_idx, new_var_index)] = sympy.symbols(f'e{new_var_index}', positive=True, real=True)
+                        augmented_solution.append(slack_value * sympy.core.numbers.Integer(copysign(1, slack_value)))
+                        new_var_index += 1
+    else:
+        print('No solution')
 
     # Add label for ease of reading
+    print('Generating graph...')
     for idx, node in G.nodes.items():
         nobj = node['object']
         if isinstance(nobj, ExternalNode):
@@ -144,8 +157,8 @@ if __name__ == '__main__':
     for idx, edge in G.edges.items():
         index_idx = idx[:2]
         label_parts = [str(edge_to_variable[index_idx])]
-        if len(res) > 0:
-            raw_equation_on_edge = res.args[0][sympyVarToIndex(edge_to_variable[index_idx])]
+        if augmented_solution is not None:
+            raw_equation_on_edge = augmented_solution[sympyVarToIndex(edge_to_variable[index_idx])]
             if isinstance(raw_equation_on_edge, (sympy.core.numbers.Integer, sympy.core.numbers.Rational)):
                 raw_equation_on_edge = userAccurate(float(raw_equation_on_edge))
             # print(type(raw_equation_on_edge), raw_equation_on_edge, round(float(raw_equation_on_edge), 4))
