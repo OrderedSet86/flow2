@@ -123,14 +123,14 @@ if __name__ == '__main__':
                         node_name = node_idx
                         G.add_node(len(G.nodes), object=ExternalNode(source_name, {}, {}, 0, 1))
                         G.add_edge(node_name, idx, object=None)
-                        edge_to_variable[(node_name, idx)] = nobj.associated_slack_variable
+                        edge_to_variable[(node_name, idx)] = sympy.symbols(f'x{node_idx}', positive=True, real=True)
                     elif slack_value < 0:
                         # Sink
                         sink_name = f'[Sink] {nobj.name}'
                         node_name = node_idx
                         G.add_node(len(G.nodes), object=ExternalNode(sink_name, {}, {}, 0, 1))
                         G.add_edge(idx, node_name, object=None)
-                        edge_to_variable[(idx, node_name)] = nobj.associated_slack_variable
+                        edge_to_variable[(idx, node_name)] = sympy.symbols(f'x{node_idx}', positive=True, real=True)
                     node_idx += 1
 
     # node_idx = max(G.nodes.keys()) + 1
