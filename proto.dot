@@ -1,434 +1,224 @@
 digraph "" {
 	graph [newrank=true,
-		nodesep=0.25,
+		nodesep=0.5,
 		rankdir=TB,
 		ranksep=1.25,
 		splines=spline,
 		"strict"=false
 	];
 	node [label="\N"];
-	subgraph cluster_rhodium {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">RHODIUM</font></td></tr></table>>];
-		28	[color=green,
-			fontname=arial,
-			label="(28) large chemical reactor",
-			shape=box];
-		29	[color=green,
-			fontname=arial,
-			label="(29) large chemical reactor",
-			shape=box];
-		30	[color=green,
-			fontname=arial,
-			label="(30) electric blast furnace",
-			shape=box];
-		33	[color=green,
-			fontname=arial,
-			label="(33) mixer",
-			shape=box];
-		34	[color=green,
-			fontname=arial,
-			label="(34) large chemical reactor",
-			shape=box];
-		35	[color=green,
-			fontname=arial,
-			label="(35) sifter",
-			shape=box];
-		36	[color=green,
-			fontname=arial,
-			label="(36) mixer",
-			shape=box];
-		37	[color=green,
-			fontname=arial,
-			label="(37) large chemical reactor",
-			shape=box];
-		38	[color=green,
-			fontname=arial,
-			label="(38) large chemical reactor",
-			shape=box];
-		53	[color=green,
-			fontname=arial,
-			label="(53) large chemical reactor",
-			shape=box];
-		56	[color=green,
-			fontname=arial,
-			label="(56) electrolyzer",
-			shape=box];
-	}
-	subgraph cluster_osmium {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">OSMIUM</font></td></tr></table>>];
-		31	[color=green,
-			fontname=arial,
-			label="(31) distillation tower",
-			shape=box];
-		32	[color=green,
-			fontname=arial,
-			label="(32) large chemical reactor",
-			shape=box];
-	}
-	subgraph cluster_platinum {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">PLATINUM</font></td></tr></table>>];
-		4	[color=green,
-			fontname=arial,
-			label="(4) large chemical reactor",
-			shape=box];
-		5	[color=green,
-			fontname=arial,
-			label="(5) large chemical reactor",
-			shape=box];
-		6	[color=green,
-			fontname=arial,
-			label="(6) large chemical reactor",
-			shape=box];
-	}
-	subgraph cluster_iridium {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">IRIDIUM</font></td></tr></table>>];
-		7	[color=green,
-			fontname=arial,
-			label="(7) large chemical reactor",
-			shape=box];
-		19	[color=green,
-			fontname=arial,
-			label="(19) electric blast furnace",
-			shape=box];
-		20	[color=green,
-			fontname=arial,
-			label="(20) large chemical reactor",
-			shape=box];
-		21	[color=green,
-			fontname=arial,
-			label="(21) large chemical reactor",
-			shape=box];
-		22	[color=green,
-			fontname=arial,
-			label="(22) large chemical reactor",
-			shape=box];
-		23	[color=green,
-			fontname=arial,
-			label="(23) fluid solidifier",
-			shape=box];
-		24	[color=green,
-			fontname=arial,
-			label="(24) electrolyzer",
-			shape=box];
-		25	[color=green,
-			fontname=arial,
-			label="(25) centrifuge",
-			shape=box];
-		48	[color=green,
-			fontname=arial,
-			label="(48) centrifuge",
-			shape=box];
-	}
-	subgraph cluster_ruthenium {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">RUTHENIUM</font></td></tr></table>>];
-		39	[color=green,
-			fontname=arial,
-			label="(39) large chemical reactor",
-			shape=box];
-		40	[color=green,
-			fontname=arial,
-			label="(40) oil cracker",
-			shape=box];
-		41	[color=green,
-			fontname=arial,
-			label="(41) distillation tower",
-			shape=box];
-		42	[color=green,
-			fontname=arial,
-			label="(42) fluid solidifier",
-			shape=box];
-		43	[color=green,
-			fontname=arial,
-			label="(43) large chemical reactor",
-			shape=box];
-		46	[color=green,
-			fontname=arial,
-			label="(46) fluid heater",
-			shape=box];
-	}
-	subgraph "cluster_pmp recycling" {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">PMP RECYCLING</font></td></tr></table>>];
-		8	[color=green,
-			fontname=arial,
-			label="(8) industrial sifter",
-			shape=box];
-		9	[color=green,
-			fontname=arial,
-			label="(9) electric blast furnace",
-			shape=box];
-	}
-	subgraph "cluster_rare element prep" {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">RARE ELEMENT PREP</font></td></tr></table>>];
-		12	[color=green,
-			fontname=arial,
-			label="(12) electric blast furnace",
-			shape=box];
-		13	[color=green,
-			fontname=arial,
-			label="(13) electric blast furnace",
-			shape=box];
-		14	[color=green,
-			fontname=arial,
-			label="(14) large chemical reactor",
-			shape=box];
-		52	[color=green,
-			fontname=arial,
-			label="(52) mixer",
-			shape=box];
-		54	[color=green,
-			fontname=arial,
-			label="(54) large chemical reactor",
-			shape=box];
-		55	[color=green,
-			fontname=arial,
-			label="(55) large chemical reactor",
-			shape=box];
-	}
-	subgraph "cluster_K2S2O7 recycling" {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">K2S2O7 RECYCLING</font></td></tr></table>>];
-		15	[color=green,
-			fontname=arial,
-			label="(15) large chemical reactor",
-			shape=box];
-		16	[color=green,
-			fontname=arial,
-			label="(16) fluid extractor",
-			shape=box];
-		17	[color=green,
-			fontname=arial,
-			label="(17) fluid solidifier",
-			shape=box];
-		18	[color=green,
-			fontname=arial,
-			label="(18) macerator",
-			shape=box];
-	}
-	subgraph "cluster_aqua regia recycling" {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">AQUA REGIA RECYCLING</font></td></tr></table>>];
-		26	[color=green,
-			fontname=arial,
-			label="(26) mixer",
-			shape=box];
-		27	[color=green,
-			fontname=arial,
-			label="(27) large chemical reactor",
-			shape=box];
-	}
-	subgraph cluster_palladium {
-		graph [label=<<table border="0"><tr><td align="left"><font color="black" face="verdana">PALLADIUM</font></td></tr></table>>];
-		0	[color=green,
-			fontname=arial,
-			label="(0) large chemical reactor",
-			shape=box];
-		1	[color=green,
-			fontname=arial,
-			label="(1) sifter",
-			shape=box];
-		2	[color=green,
-			fontname=arial,
-			label="(2) large chemical reactor",
-			shape=box];
-		3	[color=green,
-			fontname=arial,
-			label="(3) large chemical reactor",
-			shape=box];
-		44	[color=green,
-			fontname=arial,
-			label="(44) large chemical reactor",
-			shape=box];
-		45	[color=green,
-			fontname=arial,
-			label="(45) large chemical reactor",
-			shape=box];
-		47	[color=green,
-			fontname=arial,
-			label="(47) large chemical reactor",
-			shape=box];
-		49	[color=green,
-			fontname=arial,
-			label="(49) large chemical reactor",
-			shape=box];
-		50	[color=green,
-			fontname=arial,
-			label="(50) large chemical reactor",
-			shape=box];
-		51	[color=green,
-			fontname=arial,
-			label="(51) large chemical reactor",
-			shape=box];
-	}
-	59	[color=red,
+	0	[color=green,
 		fontname=arial,
-		label="(59) palladium salt dust (s189)",
+		label="(0) large chemical reactor",
 		shape=box];
-	0 -> 59	[key=0,
+	58	[color=red,
+		fontname=arial,
+		label="(58) palladium salt dust (s185)",
+		shape=box];
+	0 -> 58	[key=0,
 		fontname=arial,
 		label="x2
 16",
 		object="EdgeData(name='palladium salt dust', base_quant=-1)"];
-	60	[color=red,
+	59	[color=red,
 		fontname=arial,
-		label="(60) reprecipitated palladium dust (s190)",
+		label="(59) reprecipitated palladium dust (s186)",
 		shape=box];
-	0 -> 60	[key=0,
+	0 -> 59	[key=0,
 		fontname=arial,
 		label="x3
 2",
 		object="EdgeData(name='reprecipitated palladium dust', base_quant=-1)"];
-	57	[color=red,
+	1	[color=green,
 		fontname=arial,
-		label="(57) palladium metallic powder dust (s187)",
+		label="(1) sifter",
 		shape=box];
-	1 -> 57	[key=0,
+	56	[color=red,
+		fontname=arial,
+		label="(56) palladium metallic powder dust (s183)",
+		shape=box];
+	1 -> 56	[key=0,
 		fontname=arial,
 		label="x5
 15.2",
 		object="EdgeData(name='palladium metallic powder dust', base_quant=-1)"];
-	58	[color=red,
+	2	[color=green,
 		fontname=arial,
-		label="(58) palladium enriched ammonia (s188)",
+		label="(2) large chemical reactor",
 		shape=box];
-	2 -> 58	[key=0,
+	57	[color=red,
+		fontname=arial,
+		label="(57) palladium enriched ammonia (s184)",
+		shape=box];
+	2 -> 57	[key=0,
 		fontname=arial,
 		label="x8
 6,200.0",
 		object="EdgeData(name='palladium enriched ammonia', base_quant=-1)"];
-	61	[color=red,
+	3	[color=green,
 		fontname=arial,
-		label="(61) ammonia (s191)",
+		label="(3) large chemical reactor",
 		shape=box];
-	3 -> 61	[key=0,
+	60	[color=red,
+		fontname=arial,
+		label="(60) ammonia (s187)",
+		shape=box];
+	3 -> 60	[key=0,
 		fontname=arial,
 		label="x12
 2k",
 		object="EdgeData(name='ammonia', base_quant=-1)"];
-	63	[color=red,
+	62	[color=red,
 		fontname=arial,
-		label="(63) palladium dust",
+		label="(62) palladium dust",
 		shape=box];
-	3 -> 63	[key=0,
+	3 -> 62	[key=0,
 		fontname=arial,
 		label="x11
 1",
 		object="EdgeData(name='palladium dust', base_quant=-1)"];
-	64	[color=red,
+	63	[color=red,
 		fontname=arial,
-		label="(64) ethylene",
+		label="(63) ethylene",
 		shape=box];
-	3 -> 64	[key=0,
+	3 -> 63	[key=0,
 		fontname=arial,
 		label="x13
 500",
 		object="EdgeData(name='ethylene', base_quant=-1)"];
-	4 -> 58	[key=0,
+	4	[color=green,
+		fontname=arial,
+		label="(4) large chemical reactor",
+		shape=box];
+	4 -> 57	[key=0,
 		fontname=arial,
 		label="x18
 2,800.0",
 		object="EdgeData(name='palladium enriched ammonia', base_quant=-1)"];
-	67	[color=red,
+	66	[color=red,
 		fontname=arial,
-		label="(67) platinum salt dust (s195)",
+		label="(66) platinum salt dust (s191)",
 		shape=box];
-	4 -> 67	[key=0,
+	4 -> 66	[key=0,
 		fontname=arial,
 		label="x16
 12.444",
 		object="EdgeData(name='platinum salt dust', base_quant=-1)"];
-	68	[color=red,
+	67	[color=red,
 		fontname=arial,
-		label="(68) reprecipitated platinum dust (s196)",
+		label="(67) reprecipitated platinum dust (s192)",
 		shape=box];
-	4 -> 68	[key=0,
+	4 -> 67	[key=0,
 		fontname=arial,
 		label="x17
 3.111",
 		object="EdgeData(name='reprecipitated platinum dust', base_quant=-1)"];
-	69	[color=red,
+	68	[color=red,
 		fontname=arial,
-		label="(69) nitrogen dioxide (s197)",
+		label="(68) nitrogen dioxide (s193)",
 		shape=box];
-	4 -> 69	[key=0,
+	4 -> 68	[key=0,
 		fontname=arial,
 		label="x19
 7,000.0",
 		object="EdgeData(name='nitrogen dioxide', base_quant=-1)"];
-	70	[color=red,
+	69	[color=red,
 		fontname=arial,
-		label="(70) diluted sulfuric acid (s198)",
+		label="(69) diluted sulfuric acid (s194)",
 		shape=box];
-	4 -> 70	[key=0,
+	4 -> 69	[key=0,
 		fontname=arial,
 		label="x20
 7,000.0",
 		object="EdgeData(name='diluted sulfuric acid', base_quant=-1)"];
-	66	[color=red,
+	5	[color=green,
 		fontname=arial,
-		label="(66) platinum concentrate (s194)",
+		label="(5) large chemical reactor",
 		shape=box];
-	5 -> 66	[key=0,
+	65	[color=red,
+		fontname=arial,
+		label="(65) platinum concentrate (s190)",
+		shape=box];
+	5 -> 65	[key=0,
 		fontname=arial,
 		label="x24
 14,000.0",
 		object="EdgeData(name='platinum concentrate', base_quant=-1)"];
-	73	[color=red,
+	72	[color=red,
 		fontname=arial,
-		label="(73) platinum residue dust (s201)",
+		label="(72) platinum residue dust (s197)",
 		shape=box];
-	5 -> 73	[key=0,
+	5 -> 72	[key=0,
 		fontname=arial,
 		label="x23
 1.556",
 		object="EdgeData(name='platinum residue dust', base_quant=-1)"];
-	75	[color=red,
+	6	[color=green,
 		fontname=arial,
-		label="(75) platinum dust",
+		label="(6) large chemical reactor",
 		shape=box];
-	6 -> 75	[key=0,
+	74	[color=red,
+		fontname=arial,
+		label="(74) platinum dust",
+		shape=box];
+	6 -> 74	[key=0,
 		fontname=arial,
 		label="x27
 1.556",
 		object="EdgeData(name='platinum dust', base_quant=-1)"];
-	76	[color=red,
+	75	[color=red,
 		fontname=arial,
-		label="(76) calcium chloride dust (s203)",
+		label="(75) calcium chloride dust (s199)",
 		shape=box];
-	6 -> 76	[key=0,
+	6 -> 75	[key=0,
 		fontname=arial,
 		label="x28
 2.333",
 		object="EdgeData(name='calcium chloride dust', base_quant=-1)"];
-	65	[color=red,
+	7	[color=green,
 		fontname=arial,
-		label="(65) ammonium chloride (s193)",
+		label="(7) large chemical reactor",
 		shape=box];
-	7 -> 65	[key=0,
+	64	[color=red,
+		fontname=arial,
+		label="(64) ammonium chloride (s189)",
+		shape=box];
+	7 -> 64	[key=0,
 		fontname=arial,
 		label="x31
 4,250.909",
 		object="EdgeData(name='ammonium chloride', base_quant=-1)"];
-	78	[color=red,
+	8	[color=green,
 		fontname=arial,
-		label="(78) refined platinum salt dust (s205)",
+		label="(8) industrial sifter",
 		shape=box];
-	8 -> 78	[key=0,
+	77	[color=red,
+		fontname=arial,
+		label="(77) refined platinum salt dust (s201)",
+		shape=box];
+	8 -> 77	[key=0,
 		fontname=arial,
 		label="x33
 11.822",
 		object="EdgeData(name='refined platinum salt dust', base_quant=-1)"];
-	71	[color=red,
+	9	[color=green,
 		fontname=arial,
-		label="(71) PMP (s199)",
+		label="(9) electric blast furnace",
 		shape=box];
-	9 -> 71	[key=0,
+	70	[color=red,
+		fontname=arial,
+		label="(70) PMP (s195)",
+		shape=box];
+	9 -> 70	[key=0,
 		fontname=arial,
 		label="x35
 11.822",
 		object="EdgeData(name='PMP', base_quant=-1)"];
-	79	[color=red,
+	78	[color=red,
 		fontname=arial,
-		label="(79) chlorine (s206)",
+		label="(78) chlorine (s202)",
 		shape=box];
-	9 -> 79	[key=0,
+	9 -> 78	[key=0,
 		fontname=arial,
 		label="x36
 1,028.533",
@@ -437,11 +227,11 @@ digraph "" {
 		fontname=arial,
 		label="(10) large chemical reactor",
 		shape=box];
-	77	[color=red,
+	76	[color=red,
 		fontname=arial,
-		label="(77) hydrochloric acid (s204)",
+		label="(76) hydrochloric acid (s200)",
 		shape=box];
-	10 -> 77	[key=0,
+	10 -> 76	[key=0,
 		fontname=arial,
 		label="x39
 12,550.109",
@@ -450,1151 +240,1298 @@ digraph "" {
 		fontname=arial,
 		label="(11) electric blast furnace",
 		shape=box];
-	82	[color=red,
+	81	[color=red,
 		fontname=arial,
-		label="(82) leach residue dust (s209)",
+		label="(81) leach residue dust (s205)",
 		shape=box];
-	11 -> 82	[key=0,
+	11 -> 81	[key=0,
 		fontname=arial,
 		label="x42
 1.556",
 		object="EdgeData(name='leach residue dust', base_quant=-1)"];
-	83	[color=red,
+	82	[color=red,
 		fontname=arial,
-		label="(83) rhodium sulfate (s210)",
+		label="(82) rhodium sulfate (s206)",
 		shape=box];
-	11 -> 83	[key=0,
+	11 -> 82	[key=0,
 		fontname=arial,
 		label="x43
 560.0",
 		object="EdgeData(name='rhodium sulfate', base_quant=-1)"];
-	86	[color=red,
+	12	[color=green,
 		fontname=arial,
-		label="(86) sodium ruthenate dust (s213)",
+		label="(12) electric blast furnace",
 		shape=box];
-	12 -> 86	[key=0,
+	85	[color=red,
+		fontname=arial,
+		label="(85) sodium ruthenate dust (s208)",
+		shape=box];
+	12 -> 85	[key=0,
 		fontname=arial,
 		label="x47
 0.484",
 		object="EdgeData(name='sodium ruthenate dust', base_quant=-1)"];
-	87	[color=red,
+	86	[color=red,
 		fontname=arial,
-		label="(87) rarest metal residue dust (s214)",
+		label="(86) rarest metal residue dust (s209)",
 		shape=box];
-	12 -> 87	[key=0,
+	12 -> 86	[key=0,
 		fontname=arial,
 		label="x48
 0.967",
 		object="EdgeData(name='rarest metal residue dust', base_quant=-1)"];
-	88	[color=red,
+	13	[color=green,
 		fontname=arial,
-		label="(88) iridium metal residue dust (s215)",
+		label="(13) electric blast furnace",
 		shape=box];
-	13 -> 88	[key=0,
+	87	[color=red,
+		fontname=arial,
+		label="(87) iridium metal residue dust (s210)",
+		shape=box];
+	13 -> 87	[key=0,
 		fontname=arial,
 		label="x51
 0.484",
 		object="EdgeData(name='iridium metal residue dust', base_quant=-1)"];
-	89	[color=red,
+	88	[color=red,
 		fontname=arial,
-		label="(89) acidic osmium solution (s216)",
+		label="(88) acidic osmium solution (s211)",
 		shape=box];
-	13 -> 89	[key=0,
+	13 -> 88	[key=0,
 		fontname=arial,
 		label="x52
 483.636",
 		object="EdgeData(name='acidic osmium solution', base_quant=-1)"];
-	14 -> 82	[key=0,
+	14	[color=green,
+		fontname=arial,
+		label="(14) large chemical reactor",
+		shape=box];
+	14 -> 81	[key=0,
 		fontname=arial,
 		label="x56
 0.0566",
 		object="EdgeData(name='leach residue dust', base_quant=-1)"];
-	90	[color=red,
+	89	[color=red,
 		fontname=arial,
-		label="(90) rhodium sulfate solution (s217)",
+		label="(89) rhodium sulfate solution (s212)",
 		shape=box];
-	14 -> 90	[key=0,
+	14 -> 89	[key=0,
 		fontname=arial,
 		label="x54
 560.0",
 		object="EdgeData(name='rhodium sulfate solution', base_quant=-1)"];
-	91	[color=red,
+	90	[color=red,
 		fontname=arial,
-		label="(91) molten potassium (s218)",
+		label="(90) molten potassium (s213)",
 		shape=box];
-	14 -> 91	[key=0,
+	14 -> 90	[key=0,
 		fontname=arial,
 		label="x55
 101.818",
 		object="EdgeData(name='molten potassium', base_quant=-1)"];
-	95	[color=red,
+	15	[color=green,
 		fontname=arial,
-		label="(95) potassium disulfate dust (s222)",
+		label="(15) large chemical reactor",
 		shape=box];
-	15 -> 95	[key=0,
+	94	[color=red,
+		fontname=arial,
+		label="(94) potassium disulfate dust (s217)",
+		shape=box];
+	15 -> 94	[key=0,
 		fontname=arial,
 		label="x60
 3.889",
 		object="EdgeData(name='potassium disulfate dust', base_quant=-1)"];
-	81	[color=red,
+	16	[color=green,
 		fontname=arial,
-		label="(81) molten potassium disulfate (s208)",
+		label="(16) fluid extractor",
 		shape=box];
-	16 -> 81	[key=0,
+	80	[color=red,
+		fontname=arial,
+		label="(80) molten potassium disulfate (s204)",
+		shape=box];
+	16 -> 80	[key=0,
 		fontname=arial,
 		label="x62
 560.0",
 		object="EdgeData(name='molten potassium disulfate', base_quant=-1)"];
-	96	[color=red,
+	17	[color=green,
 		fontname=arial,
-		label="(96) potassium ingot (s223)",
+		label="(17) fluid solidifier",
 		shape=box];
-	17 -> 96	[key=0,
+	95	[color=red,
+		fontname=arial,
+		label="(95) potassium ingot (s218)",
+		shape=box];
+	17 -> 95	[key=0,
 		fontname=arial,
 		label="x64
 0.707",
 		object="EdgeData(name='potassium ingot', base_quant=-1)"];
-	93	[color=red,
+	18	[color=green,
 		fontname=arial,
-		label="(93) potassium dust (s220)",
+		label="(18) macerator",
 		shape=box];
-	18 -> 93	[key=0,
+	92	[color=red,
+		fontname=arial,
+		label="(92) potassium dust (s215)",
+		shape=box];
+	18 -> 92	[key=0,
 		fontname=arial,
 		label="x66
 0.707",
 		object="EdgeData(name='potassium dust', base_quant=-1)"];
-	97	[color=red,
+	19	[color=green,
 		fontname=arial,
-		label="(97) sludge dust residue dust (s224)",
+		label="(19) electric blast furnace",
 		shape=box];
-	19 -> 97	[key=0,
+	96	[color=red,
+		fontname=arial,
+		label="(96) sludge dust residue dust (s219)",
+		shape=box];
+	19 -> 96	[key=0,
 		fontname=arial,
 		label="x68
 0.484",
 		object="EdgeData(name='sludge dust residue dust', base_quant=-1)"];
-	98	[color=red,
+	97	[color=red,
 		fontname=arial,
-		label="(98) iridium dioxide dust (s225)",
+		label="(97) iridium dioxide dust (s220)",
 		shape=box];
-	19 -> 98	[key=0,
+	19 -> 97	[key=0,
 		fontname=arial,
 		label="x69
 0.484",
 		object="EdgeData(name='iridium dioxide dust', base_quant=-1)"];
-	99	[color=red,
+	20	[color=green,
 		fontname=arial,
-		label="(99) acidic iridium solution (s226)",
+		label="(20) large chemical reactor",
 		shape=box];
-	20 -> 99	[key=0,
+	98	[color=red,
+		fontname=arial,
+		label="(98) acidic iridium solution (s221)",
+		shape=box];
+	20 -> 98	[key=0,
 		fontname=arial,
 		label="x72
 483.636",
 		object="EdgeData(name='acidic iridium solution', base_quant=-1)"];
-	21 -> 61	[key=0,
+	21	[color=green,
+		fontname=arial,
+		label="(21) large chemical reactor",
+		shape=box];
+	21 -> 60	[key=0,
 		fontname=arial,
 		label="x76
 1,450.909",
 		object="EdgeData(name='ammonia', base_quant=-1)"];
-	100	[color=red,
+	99	[color=red,
 		fontname=arial,
-		label="(100) iridium chloride dust (s227)",
+		label="(99) iridium chloride dust (s222)",
 		shape=box];
-	21 -> 100	[key=0,
+	21 -> 99	[key=0,
 		fontname=arial,
 		label="x75
 0.484",
 		object="EdgeData(name='iridium chloride dust', base_quant=-1)"];
-	101	[color=red,
+	22	[color=green,
 		fontname=arial,
-		label="(101) metallic sludge dust residue dust (s228)",
+		label="(22) large chemical reactor",
 		shape=box];
-	22 -> 101	[key=0,
+	100	[color=red,
+		fontname=arial,
+		label="(100) metallic sludge dust residue dust (s223)",
+		shape=box];
+	22 -> 100	[key=0,
 		fontname=arial,
 		label="x79
 0.484",
 		object="EdgeData(name='metallic sludge dust residue dust', base_quant=-1)"];
-	102	[color=red,
+	101	[color=red,
 		fontname=arial,
-		label="(102) iridium dust",
+		label="(101) iridium dust",
 		shape=box];
-	22 -> 102	[key=0,
+	22 -> 101	[key=0,
 		fontname=arial,
 		label="x80
 0.484",
 		object="EdgeData(name='iridium dust', base_quant=-1)"];
-	103	[color=red,
+	102	[color=red,
 		fontname=arial,
-		label="(103) calcium chloride (s229)",
+		label="(102) calcium chloride (s224)",
 		shape=box];
-	22 -> 103	[key=0,
+	22 -> 102	[key=0,
 		fontname=arial,
 		label="x81
 1,450.909",
 		object="EdgeData(name='calcium chloride', base_quant=-1)"];
-	23 -> 76	[key=0,
+	23	[color=green,
+		fontname=arial,
+		label="(23) fluid solidifier",
+		shape=box];
+	23 -> 75	[key=0,
 		fontname=arial,
 		label="x83
 1.451",
 		object="EdgeData(name='calcium chloride dust', base_quant=-1)"];
-	74	[color=red,
+	24	[color=green,
 		fontname=arial,
-		label="(74) calcium dust (s202)",
+		label="(24) electrolyzer",
 		shape=box];
-	24 -> 74	[key=0,
+	73	[color=red,
+		fontname=arial,
+		label="(73) calcium dust (s198)",
+		shape=box];
+	24 -> 73	[key=0,
 		fontname=arial,
 		label="x85
 1.261",
 		object="EdgeData(name='calcium dust', base_quant=-1)"];
-	24 -> 79	[key=0,
+	24 -> 78	[key=0,
 		fontname=arial,
 		label="x86
 2,522.828",
 		object="EdgeData(name='chlorine', base_quant=-1)"];
-	104	[color=red,
+	25	[color=green,
 		fontname=arial,
-		label="(104) nickel dust",
+		label="(25) centrifuge",
 		shape=box];
-	25 -> 104	[key=0,
+	103	[color=red,
+		fontname=arial,
+		label="(103) nickel dust",
+		shape=box];
+	25 -> 103	[key=0,
 		fontname=arial,
 		label="x88
 0.242",
 		object="EdgeData(name='nickel dust', base_quant=-1)"];
-	105	[color=red,
+	104	[color=red,
 		fontname=arial,
-		label="(105) copper dust",
+		label="(104) copper dust",
 		shape=box];
-	25 -> 105	[key=0,
+	25 -> 104	[key=0,
 		fontname=arial,
 		label="x89
 0.242",
 		object="EdgeData(name='copper dust', base_quant=-1)"];
-	72	[color=red,
+	26	[color=green,
 		fontname=arial,
-		label="(72) aqua regia (s200)",
+		label="(26) mixer",
 		shape=box];
-	26 -> 72	[key=0,
+	71	[color=red,
+		fontname=arial,
+		label="(71) aqua regia (s196)",
+		shape=box];
+	26 -> 71	[key=0,
 		fontname=arial,
 		label="x92
 14,000.0",
 		object="EdgeData(name='aqua regia', base_quant=-1)"];
-	106	[color=red,
+	27	[color=green,
 		fontname=arial,
-		label="(106) nitric acid (s230)",
+		label="(27) large chemical reactor",
 		shape=box];
-	27 -> 106	[key=0,
+	105	[color=red,
+		fontname=arial,
+		label="(105) nitric acid (s225)",
+		shape=box];
+	27 -> 105	[key=0,
 		fontname=arial,
 		label="x95
 7,000.0",
 		object="EdgeData(name='nitric acid', base_quant=-1)"];
-	108	[color=red,
+	28	[color=green,
 		fontname=arial,
-		label="(108) zinc sulfate dust (s232)",
+		label="(28) large chemical reactor",
 		shape=box];
-	28 -> 108	[key=0,
+	107	[color=red,
+		fontname=arial,
+		label="(107) zinc sulfate dust (s227)",
+		shape=box];
+	28 -> 107	[key=0,
 		fontname=arial,
 		label="x98
 3.36",
 		object="EdgeData(name='zinc sulfate dust', base_quant=-1)"];
-	109	[color=red,
+	108	[color=red,
 		fontname=arial,
-		label="(109) crude rhodium metal dust (s233)",
+		label="(108) crude rhodium metal dust (s228)",
 		shape=box];
-	28 -> 109	[key=0,
+	28 -> 108	[key=0,
 		fontname=arial,
 		label="x99
 0.56",
 		object="EdgeData(name='crude rhodium metal dust', base_quant=-1)"];
-	107	[color=red,
+	29	[color=green,
 		fontname=arial,
-		label="(107) zinc dust (s231)",
+		label="(29) large chemical reactor",
 		shape=box];
-	29 -> 107	[key=0,
+	106	[color=red,
+		fontname=arial,
+		label="(106) zinc dust (s226)",
+		shape=box];
+	29 -> 106	[key=0,
 		fontname=arial,
 		label="x102
 0.56",
 		object="EdgeData(name='zinc dust', base_quant=-1)"];
-	110	[color=red,
+	109	[color=red,
 		fontname=arial,
-		label="(110) sulfuric acid (s234)",
+		label="(109) sulfuric acid (s229)",
 		shape=box];
-	29 -> 110	[key=0,
+	29 -> 109	[key=0,
 		fontname=arial,
 		label="x103
 560.0",
 		object="EdgeData(name='sulfuric acid', base_quant=-1)"];
-	112	[color=red,
+	30	[color=green,
 		fontname=arial,
-		label="(112) rhodium salt dust (s236)",
+		label="(30) electric blast furnace",
 		shape=box];
-	30 -> 112	[key=0,
+	111	[color=red,
+		fontname=arial,
+		label="(111) rhodium salt dust (s231)",
+		shape=box];
+	30 -> 111	[key=0,
 		fontname=arial,
 		label="x107
 1.68",
 		object="EdgeData(name='rhodium salt dust', base_quant=-1)"];
-	113	[color=red,
+	31	[color=green,
 		fontname=arial,
-		label="(113) osmium solution (s237)",
+		label="(31) distillation tower",
 		shape=box];
-	31 -> 113	[key=0,
+	112	[color=red,
+		fontname=arial,
+		label="(112) osmium solution (s232)",
+		shape=box];
+	31 -> 112	[key=0,
 		fontname=arial,
 		label="x109
 48.364",
 		object="EdgeData(name='osmium solution', base_quant=-1)"];
-	32 -> 79	[key=0,
+	32	[color=green,
+		fontname=arial,
+		label="(32) large chemical reactor",
+		shape=box];
+	32 -> 78	[key=0,
 		fontname=arial,
 		label="x113
 338.545",
 		object="EdgeData(name='chlorine', base_quant=-1)"];
-	114	[color=red,
+	113	[color=red,
 		fontname=arial,
-		label="(114) osmium dust",
+		label="(113) osmium dust",
 		shape=box];
-	32 -> 114	[key=0,
+	32 -> 113	[key=0,
 		fontname=arial,
 		label="x112
 0.0484",
 		object="EdgeData(name='osmium dust', base_quant=-1)"];
-	115	[color=red,
+	33	[color=green,
 		fontname=arial,
-		label="(115) rhodium salt solution (s238)",
+		label="(33) mixer",
 		shape=box];
-	33 -> 115	[key=0,
+	114	[color=red,
+		fontname=arial,
+		label="(114) rhodium salt solution (s233)",
+		shape=box];
+	33 -> 114	[key=0,
 		fontname=arial,
 		label="x115
 336.0",
 		object="EdgeData(name='rhodium salt solution', base_quant=-1)"];
-	111	[color=red,
+	34	[color=green,
 		fontname=arial,
-		label="(111) salt (s235)",
+		label="(34) large chemical reactor",
 		shape=box];
-	34 -> 111	[key=0,
+	110	[color=red,
+		fontname=arial,
+		label="(110) salt (s230)",
+		shape=box];
+	34 -> 110	[key=0,
 		fontname=arial,
 		label="x119
 0.336",
 		object="EdgeData(name='salt', base_quant=-1)"];
-	117	[color=red,
+	116	[color=red,
 		fontname=arial,
-		label="(117) rhodium nitrate (s240)",
+		label="(116) rhodium nitrate (s235)",
 		shape=box];
-	34 -> 117	[key=0,
+	34 -> 116	[key=0,
 		fontname=arial,
 		label="x118
 0.336",
 		object="EdgeData(name='rhodium nitrate', base_quant=-1)"];
-	118	[color=red,
+	35	[color=green,
 		fontname=arial,
-		label="(118) rhodium filter cake dust (s241)",
+		label="(35) sifter",
 		shape=box];
-	35 -> 118	[key=0,
+	117	[color=red,
+		fontname=arial,
+		label="(117) rhodium filter cake dust (s236)",
+		shape=box];
+	35 -> 117	[key=0,
 		fontname=arial,
 		label="x121
 0.319",
 		object="EdgeData(name='rhodium filter cake dust', base_quant=-1)"];
-	119	[color=red,
+	36	[color=green,
 		fontname=arial,
-		label="(119) rhodium filter cake solution (s242)",
+		label="(36) mixer",
 		shape=box];
-	36 -> 119	[key=0,
+	118	[color=red,
+		fontname=arial,
+		label="(118) rhodium filter cake solution (s237)",
+		shape=box];
+	36 -> 118	[key=0,
 		fontname=arial,
 		label="x123
 319.2",
 		object="EdgeData(name='rhodium filter cake solution', base_quant=-1)"];
-	120	[color=red,
+	37	[color=green,
 		fontname=arial,
-		label="(120) reprecipitated rhodium dust (s243)",
+		label="(37) large chemical reactor",
 		shape=box];
-	37 -> 120	[key=0,
+	119	[color=red,
+		fontname=arial,
+		label="(119) reprecipitated rhodium dust (s238)",
+		shape=box];
+	37 -> 119	[key=0,
 		fontname=arial,
 		label="x125
 0.319",
 		object="EdgeData(name='reprecipitated rhodium dust', base_quant=-1)"];
-	38 -> 61	[key=0,
+	38	[color=green,
+		fontname=arial,
+		label="(38) large chemical reactor",
+		shape=box];
+	38 -> 60	[key=0,
 		fontname=arial,
 		label="x129
 319.2",
 		object="EdgeData(name='ammonia', base_quant=-1)"];
-	38 -> 79	[key=0,
+	38 -> 78	[key=0,
 		fontname=arial,
 		label="x130
 319.2",
 		object="EdgeData(name='chlorine', base_quant=-1)"];
-	121	[color=red,
+	120	[color=red,
 		fontname=arial,
-		label="(121) rhodium dust",
+		label="(120) rhodium dust",
 		shape=box];
-	38 -> 121	[key=0,
+	38 -> 120	[key=0,
 		fontname=arial,
 		label="x128
 0.319",
 		object="EdgeData(name='rhodium dust', base_quant=-1)"];
-	122	[color=red,
+	39	[color=green,
 		fontname=arial,
-		label="(122) ruthenium tetroxide solution (s244)",
+		label="(39) large chemical reactor",
 		shape=box];
-	39 -> 122	[key=0,
+	121	[color=red,
+		fontname=arial,
+		label="(121) ruthenium tetroxide solution (s239)",
+		shape=box];
+	39 -> 121	[key=0,
 		fontname=arial,
 		label="x133
 725.455",
 		object="EdgeData(name='ruthenium tetroxide solution', base_quant=-1)"];
-	124	[color=red,
+	40	[color=green,
 		fontname=arial,
-		label="(124) hot ruthenium tetroxide solution (s246)",
+		label="(40) oil cracker",
 		shape=box];
-	40 -> 124	[key=0,
+	123	[color=red,
+		fontname=arial,
+		label="(123) hot ruthenium tetroxide solution (s241)",
+		shape=box];
+	40 -> 123	[key=0,
 		fontname=arial,
 		label="x136
 1,450.909",
 		object="EdgeData(name='hot ruthenium tetroxide solution', base_quant=-1)"];
-	41 -> 111	[key=0,
+	41	[color=green,
+		fontname=arial,
+		label="(41) distillation tower",
+		shape=box];
+	41 -> 110	[key=0,
 		fontname=arial,
 		label="x138
 0.967",
 		object="EdgeData(name='salt', base_quant=-1)"];
-	125	[color=red,
+	124	[color=red,
 		fontname=arial,
-		label="(125) ruthenium tetroxide (s247)",
+		label="(124) ruthenium tetroxide (s242)",
 		shape=box];
-	41 -> 125	[key=0,
+	41 -> 124	[key=0,
 		fontname=arial,
 		label="x139
 1,160.727",
 		object="EdgeData(name='ruthenium tetroxide', base_quant=-1)"];
-	126	[color=red,
+	42	[color=green,
 		fontname=arial,
-		label="(126) ruthenium tetroxide dust (s248)",
+		label="(42) fluid solidifier",
 		shape=box];
-	42 -> 126	[key=0,
+	125	[color=red,
+		fontname=arial,
+		label="(125) ruthenium tetroxide dust (s243)",
+		shape=box];
+	42 -> 125	[key=0,
 		fontname=arial,
 		label="x141
 1.161",
 		object="EdgeData(name='ruthenium tetroxide dust', base_quant=-1)"];
-	43 -> 79	[key=0,
+	43	[color=green,
+		fontname=arial,
+		label="(43) large chemical reactor",
+		shape=box];
+	43 -> 78	[key=0,
 		fontname=arial,
 		label="x145
 6,964.364",
 		object="EdgeData(name='chlorine', base_quant=-1)"];
-	127	[color=red,
+	126	[color=red,
 		fontname=arial,
-		label="(127) ruthenium dust",
+		label="(126) ruthenium dust",
 		shape=box];
-	43 -> 127	[key=0,
+	43 -> 126	[key=0,
 		fontname=arial,
 		label="x144
 1.161",
 		object="EdgeData(name='ruthenium dust', base_quant=-1)"];
-	62	[color=red,
+	44	[color=green,
 		fontname=arial,
-		label="(62) formic acid (s192)",
+		label="(44) large chemical reactor",
 		shape=box];
-	44 -> 62	[key=0,
+	61	[color=red,
+		fontname=arial,
+		label="(61) formic acid (s188)",
+		shape=box];
+	44 -> 61	[key=0,
 		fontname=arial,
 		label="x149
 2k",
 		object="EdgeData(name='formic acid', base_quant=-1)"];
-	129	[color=red,
+	128	[color=red,
 		fontname=arial,
-		label="(129) sodium sulfate dust (s250)",
+		label="(128) sodium sulfate dust (s245)",
 		shape=box];
-	44 -> 129	[key=0,
+	44 -> 128	[key=0,
 		fontname=arial,
 		label="x148
 7",
 		object="EdgeData(name='sodium sulfate dust', base_quant=-1)"];
-	128	[color=red,
+	45	[color=green,
 		fontname=arial,
-		label="(128) sodium formate (s249)",
+		label="(45) large chemical reactor",
 		shape=box];
-	45 -> 128	[key=0,
+	127	[color=red,
+		fontname=arial,
+		label="(127) sodium formate (s244)",
+		shape=box];
+	45 -> 127	[key=0,
 		fontname=arial,
 		label="x152
 2k",
 		object="EdgeData(name='sodium formate', base_quant=-1)"];
-	123	[color=red,
+	46	[color=green,
 		fontname=arial,
-		label="(123) steam (s245)",
+		label="(46) fluid heater",
 		shape=box];
-	46 -> 123	[key=0,
+	122	[color=red,
+		fontname=arial,
+		label="(122) steam (s240)",
+		shape=box];
+	46 -> 122	[key=0,
 		fontname=arial,
 		label="x153
 725.455",
 		object="EdgeData(name='steam', base_quant=-1)"];
-	130	[color=red,
+	47	[color=green,
 		fontname=arial,
-		label="(130) carbon monoxide (s251)",
+		label="(47) large chemical reactor",
 		shape=box];
-	47 -> 130	[key=0,
+	129	[color=red,
+		fontname=arial,
+		label="(129) carbon monoxide (s246)",
+		shape=box];
+	47 -> 129	[key=0,
 		fontname=arial,
 		label="x156
 2k",
 		object="EdgeData(name='carbon monoxide', base_quant=-1)"];
-	133	[color=red,
+	48	[color=green,
 		fontname=arial,
-		label="(133) gold dust",
+		label="(48) centrifuge",
 		shape=box];
-	48 -> 133	[key=0,
+	132	[color=red,
+		fontname=arial,
+		label="(132) gold dust",
+		shape=box];
+	48 -> 132	[key=0,
 		fontname=arial,
 		label="x158
 0.193",
 		object="EdgeData(name='gold dust', base_quant=-1)"];
-	49 -> 110	[key=0,
+	49	[color=green,
+		fontname=arial,
+		label="(49) large chemical reactor",
+		shape=box];
+	49 -> 109	[key=0,
 		fontname=arial,
 		label="x161
 1k",
 		object="EdgeData(name='sulfuric acid', base_quant=-1)"];
-	134	[color=red,
+	133	[color=red,
 		fontname=arial,
-		label="(134) sodium dust (s253)",
+		label="(133) sodium dust (s248)",
 		shape=box];
-	49 -> 134	[key=0,
+	49 -> 133	[key=0,
 		fontname=arial,
 		label="x162
 2",
 		object="EdgeData(name='sodium dust', base_quant=-1)"];
-	80	[color=red,
+	50	[color=green,
 		fontname=arial,
-		label="(80) hydrogen (s207)",
+		label="(50) large chemical reactor",
 		shape=box];
-	50 -> 80	[key=0,
+	79	[color=red,
+		fontname=arial,
+		label="(79) hydrogen (s203)",
+		shape=box];
+	50 -> 79	[key=0,
 		fontname=arial,
 		label="x165
 2k",
 		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	131	[color=red,
+	130	[color=red,
 		fontname=arial,
-		label="(131) sodium hydroxide dust (s252)",
+		label="(130) sodium hydroxide dust (s247)",
 		shape=box];
-	50 -> 131	[key=0,
+	50 -> 130	[key=0,
 		fontname=arial,
 		label="x164
 6",
 		object="EdgeData(name='sodium hydroxide dust', base_quant=-1)"];
-	51 -> 61	[key=0,
+	51	[color=green,
+		fontname=arial,
+		label="(51) large chemical reactor",
+		shape=box];
+	51 -> 60	[key=0,
 		fontname=arial,
 		label="x168
 6,680.8",
 		object="EdgeData(name='ammonia', base_quant=-1)"];
-	85	[color=red,
+	52	[color=green,
 		fontname=arial,
-		label="(85) salt water (s212)",
+		label="(52) mixer",
 		shape=box];
-	52 -> 85	[key=0,
+	84	[color=red,
+		fontname=arial,
+		label="(84) salt water (s207)",
+		shape=box];
+	52 -> 84	[key=0,
 		fontname=arial,
 		label="x170
 161.212",
 		object="EdgeData(name='salt water', base_quant=-1)"];
-	53 -> 80	[key=0,
+	53	[color=green,
+		fontname=arial,
+		label="(53) large chemical reactor",
+		shape=box];
+	53 -> 79	[key=0,
 		fontname=arial,
 		label="x174
 67.2",
 		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	116	[color=red,
+	115	[color=red,
 		fontname=arial,
-		label="(116) sodium nitrate dust (s239)",
+		label="(115) sodium nitrate dust (s234)",
 		shape=box];
-	53 -> 116	[key=0,
+	53 -> 115	[key=0,
 		fontname=arial,
 		label="x173
 0.336",
 		object="EdgeData(name='sodium nitrate dust', base_quant=-1)"];
-	54 -> 80	[key=0,
+	54	[color=green,
+		fontname=arial,
+		label="(54) large chemical reactor",
+		shape=box];
+	54 -> 105	[key=0,
 		fontname=arial,
 		label="x178
-322.424",
-		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	84	[color=red,
-		fontname=arial,
-		label="(84) saltpeter (s211)",
-		shape=box];
-	54 -> 84	[key=0,
-		fontname=arial,
-		label="x177
-1.612",
-		object="EdgeData(name='saltpeter', base_quant=-1)"];
-	55 -> 106	[key=0,
-		fontname=arial,
-		label="x182
-389.624",
+67.2",
 		object="EdgeData(name='nitric acid', base_quant=-1)"];
-	56 -> 80	[key=0,
+	55	[color=green,
 		fontname=arial,
-		label="x184
+		label="(55) electrolyzer",
+		shape=box];
+	55 -> 79	[key=0,
+		fontname=arial,
+		label="x180
 1,120.0",
 		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	92	[color=red,
+	91	[color=red,
 		fontname=arial,
-		label="(92) sulfur dust (s219)",
+		label="(91) sulfur dust (s214)",
 		shape=box];
-	56 -> 92	[key=0,
+	55 -> 91	[key=0,
 		fontname=arial,
-		label="x185
+		label="x181
 0.56",
 		object="EdgeData(name='sulfur dust', base_quant=-1)"];
-	94	[color=red,
+	93	[color=red,
 		fontname=arial,
-		label="(94) oxygen (s221)",
+		label="(93) oxygen (s216)",
 		shape=box];
-	56 -> 94	[key=0,
+	55 -> 93	[key=0,
 		fontname=arial,
-		label="x186
+		label="x182
 2,240.0",
 		object="EdgeData(name='oxygen', base_quant=-1)"];
-	57 -> 0	[key=0,
+	56 -> 0	[key=0,
 		fontname=arial,
 		label="x0
 9",
 		object="EdgeData(name='palladium metallic powder dust', base_quant=-1)"];
-	57 -> 2	[key=0,
+	56 -> 2	[key=0,
 		fontname=arial,
 		label="x6
 6.2",
 		object="EdgeData(name='palladium metallic powder dust', base_quant=-1)"];
-	58 -> 0	[key=0,
+	57 -> 0	[key=0,
 		fontname=arial,
 		label="x1
 9k",
 		object="EdgeData(name='palladium enriched ammonia', base_quant=-1)"];
-	59 -> 1	[key=0,
+	58 -> 1	[key=0,
 		fontname=arial,
 		label="x4
 16",
 		object="EdgeData(name='palladium salt dust', base_quant=-1)"];
-	60 -> 3	[key=0,
+	59 -> 3	[key=0,
 		fontname=arial,
 		label="x10
 2",
 		object="EdgeData(name='reprecipitated palladium dust', base_quant=-1)"];
-	61 -> 2	[key=0,
+	60 -> 2	[key=0,
 		fontname=arial,
 		label="x7
 6,200.0",
 		object="EdgeData(name='ammonia', base_quant=-1)"];
-	61 -> 7	[key=0,
+	60 -> 7	[key=0,
 		fontname=arial,
 		label="x30
 4,250.909",
 		object="EdgeData(name='ammonia', base_quant=-1)"];
-	62 -> 3	[key=0,
+	61 -> 3	[key=0,
 		fontname=arial,
 		label="x9
 2k",
 		object="EdgeData(name='formic acid', base_quant=-1)"];
-	65 -> 4	[key=0,
+	64 -> 4	[key=0,
 		fontname=arial,
 		label="x14
 2,800.0",
 		object="EdgeData(name='ammonium chloride', base_quant=-1)"];
-	65 -> 21	[key=0,
+	64 -> 21	[key=0,
 		fontname=arial,
 		label="x73
 1,450.909",
 		object="EdgeData(name='ammonium chloride', base_quant=-1)"];
-	66 -> 4	[key=0,
+	65 -> 4	[key=0,
 		fontname=arial,
 		label="x15
 14,000.0",
 		object="EdgeData(name='platinum concentrate', base_quant=-1)"];
-	67 -> 8	[key=0,
+	66 -> 8	[key=0,
 		fontname=arial,
 		label="x32
 12.444",
 		object="EdgeData(name='platinum salt dust', base_quant=-1)"];
-	68 -> 6	[key=0,
+	67 -> 6	[key=0,
 		fontname=arial,
 		label="x26
 3.111",
 		object="EdgeData(name='reprecipitated platinum dust', base_quant=-1)"];
-	69 -> 27	[key=0,
+	68 -> 27	[key=0,
 		fontname=arial,
 		label="x93
 7,000.0",
 		object="EdgeData(name='nitrogen dioxide', base_quant=-1)"];
-	70 -> 26	[key=0,
+	69 -> 26	[key=0,
 		fontname=arial,
 		label="x90
 7,000.0",
 		object="EdgeData(name='diluted sulfuric acid', base_quant=-1)"];
-	71 -> 5	[key=0,
+	70 -> 5	[key=0,
 		fontname=arial,
 		label="x21
 14.0",
 		object="EdgeData(name='PMP', base_quant=-1)"];
-	72 -> 5	[key=0,
+	71 -> 5	[key=0,
 		fontname=arial,
 		label="x22
 14,000.0",
 		object="EdgeData(name='aqua regia', base_quant=-1)"];
-	73 -> 11	[key=0,
+	72 -> 11	[key=0,
 		fontname=arial,
 		label="x40
 1.556",
 		object="EdgeData(name='platinum residue dust', base_quant=-1)"];
-	74 -> 6	[key=0,
+	73 -> 6	[key=0,
 		fontname=arial,
 		label="x25
 0.778",
 		object="EdgeData(name='calcium dust', base_quant=-1)"];
-	74 -> 22	[key=0,
+	73 -> 22	[key=0,
 		fontname=arial,
 		label="x77
 1.451",
 		object="EdgeData(name='calcium dust', base_quant=-1)"];
-	76 -> 24	[key=0,
+	75 -> 24	[key=0,
 		fontname=arial,
 		label="x84
 3.784",
 		object="EdgeData(name='calcium chloride dust', base_quant=-1)"];
-	77 -> 7	[key=0,
+	76 -> 7	[key=0,
 		fontname=arial,
 		label="x29
 4,250.909",
 		object="EdgeData(name='hydrochloric acid', base_quant=-1)"];
-	77 -> 13	[key=0,
+	76 -> 13	[key=0,
 		fontname=arial,
 		label="x50
 241.818",
 		object="EdgeData(name='hydrochloric acid', base_quant=-1)"];
-	77 -> 20	[key=0,
+	76 -> 20	[key=0,
 		fontname=arial,
 		label="x71
 483.636",
 		object="EdgeData(name='hydrochloric acid', base_quant=-1)"];
-	77 -> 32	[key=0,
+	76 -> 32	[key=0,
 		fontname=arial,
 		label="x110
 290.182",
 		object="EdgeData(name='hydrochloric acid', base_quant=-1)"];
-	77 -> 38	[key=0,
+	76 -> 38	[key=0,
 		fontname=arial,
 		label="x127
 319.2",
 		object="EdgeData(name='hydrochloric acid', base_quant=-1)"];
-	77 -> 43	[key=0,
+	76 -> 43	[key=0,
 		fontname=arial,
 		label="x142
 6,964.364",
 		object="EdgeData(name='hydrochloric acid', base_quant=-1)"];
-	78 -> 9	[key=0,
+	77 -> 9	[key=0,
 		fontname=arial,
 		label="x34
 11.822",
 		object="EdgeData(name='refined platinum salt dust', base_quant=-1)"];
-	79 -> 10	[key=0,
+	78 -> 10	[key=0,
 		fontname=arial,
 		label="x38
 12,550.109",
 		object="EdgeData(name='chlorine', base_quant=-1)"];
-	79 -> 30	[key=0,
+	78 -> 30	[key=0,
 		fontname=arial,
 		label="x106
 560.0",
 		object="EdgeData(name='chlorine', base_quant=-1)"];
-	79 -> 39	[key=0,
+	78 -> 39	[key=0,
 		fontname=arial,
 		label="x132
 241.818",
 		object="EdgeData(name='chlorine', base_quant=-1)"];
-	80 -> 10	[key=0,
+	79 -> 10	[key=0,
 		fontname=arial,
 		label="x37
 12,550.109",
 		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	80 -> 29	[key=0,
+	79 -> 29	[key=0,
 		fontname=arial,
 		label="x101
 1,120.0",
 		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	80 -> 49	[key=0,
+	79 -> 49	[key=0,
 		fontname=arial,
 		label="x160
 2k",
 		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	80 -> 51	[key=0,
+	79 -> 51	[key=0,
 		fontname=arial,
 		label="x167
 20,042.4",
 		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	80 -> 55	[key=0,
+	79 -> 54	[key=0,
 		fontname=arial,
-		label="x181
-1,168.873",
+		label="x177
+201.6",
 		object="EdgeData(name='hydrogen', base_quant=-1)"];
-	81 -> 11	[key=0,
+	80 -> 11	[key=0,
 		fontname=arial,
 		label="x41
 560.0",
 		object="EdgeData(name='molten potassium disulfate', base_quant=-1)"];
-	82 -> 12	[key=0,
+	81 -> 12	[key=0,
 		fontname=arial,
 		label="x44
 1.612",
 		object="EdgeData(name='leach residue dust', base_quant=-1)"];
-	83 -> 14	[key=0,
+	82 -> 14	[key=0,
 		fontname=arial,
 		label="x53
 560.0",
 		object="EdgeData(name='rhodium sulfate', base_quant=-1)"];
-	84 -> 12	[key=0,
+	83	[color=red,
+		fontname=arial,
+		label="(83) saltpeter",
+		shape=box];
+	83 -> 12	[key=0,
 		fontname=arial,
 		label="x45
 1.612",
 		object="EdgeData(name='saltpeter', base_quant=-1)"];
-	85 -> 12	[key=0,
+	84 -> 12	[key=0,
 		fontname=arial,
 		label="x46
 161.212",
 		object="EdgeData(name='salt water', base_quant=-1)"];
-	86 -> 39	[key=0,
+	85 -> 39	[key=0,
 		fontname=arial,
 		label="x131
 0.484",
 		object="EdgeData(name='sodium ruthenate dust', base_quant=-1)"];
-	87 -> 13	[key=0,
+	86 -> 13	[key=0,
 		fontname=arial,
 		label="x49
 0.967",
 		object="EdgeData(name='rarest metal residue dust', base_quant=-1)"];
-	88 -> 19	[key=0,
+	87 -> 19	[key=0,
 		fontname=arial,
 		label="x67
 0.484",
 		object="EdgeData(name='iridium metal residue dust', base_quant=-1)"];
-	89 -> 31	[key=0,
+	88 -> 31	[key=0,
 		fontname=arial,
 		label="x108
 483.636",
 		object="EdgeData(name='acidic osmium solution', base_quant=-1)"];
-	90 -> 28	[key=0,
+	89 -> 28	[key=0,
 		fontname=arial,
 		label="x96
 560.0",
 		object="EdgeData(name='rhodium sulfate solution', base_quant=-1)"];
-	91 -> 17	[key=0,
+	90 -> 17	[key=0,
 		fontname=arial,
 		label="x63
 101.818",
 		object="EdgeData(name='molten potassium', base_quant=-1)"];
-	92 -> 15	[key=0,
+	91 -> 15	[key=0,
 		fontname=arial,
 		label="x57
 0.707",
 		object="EdgeData(name='sulfur dust', base_quant=-1)"];
-	93 -> 15	[key=0,
+	92 -> 15	[key=0,
 		fontname=arial,
 		label="x58
 0.707",
 		object="EdgeData(name='potassium dust', base_quant=-1)"];
-	93 -> 54	[key=0,
-		fontname=arial,
-		label="x175
-0.322",
-		object="EdgeData(name='potassium dust', base_quant=-1)"];
-	94 -> 15	[key=0,
+	93 -> 15	[key=0,
 		fontname=arial,
 		label="x59
 2,474.747",
 		object="EdgeData(name='oxygen', base_quant=-1)"];
-	94 -> 27	[key=0,
+	93 -> 27	[key=0,
 		fontname=arial,
 		label="x94
 3,500.0",
 		object="EdgeData(name='oxygen', base_quant=-1)"];
-	94 -> 47	[key=0,
+	93 -> 47	[key=0,
 		fontname=arial,
 		label="x155
 2k",
 		object="EdgeData(name='oxygen', base_quant=-1)"];
-	94 -> 55	[key=0,
+	93 -> 54	[key=0,
 		fontname=arial,
-		label="x179
-1,558.497",
+		label="x175
+268.8",
 		object="EdgeData(name='oxygen', base_quant=-1)"];
-	95 -> 16	[key=0,
+	94 -> 16	[key=0,
 		fontname=arial,
 		label="x61
 3.889",
 		object="EdgeData(name='potassium disulfate dust', base_quant=-1)"];
-	96 -> 18	[key=0,
+	95 -> 18	[key=0,
 		fontname=arial,
 		label="x65
 0.707",
 		object="EdgeData(name='potassium ingot', base_quant=-1)"];
-	97 -> 48	[key=0,
+	96 -> 48	[key=0,
 		fontname=arial,
 		label="x157
 0.484",
 		object="EdgeData(name='sludge dust residue dust', base_quant=-1)"];
-	98 -> 20	[key=0,
+	97 -> 20	[key=0,
 		fontname=arial,
 		label="x70
 0.484",
 		object="EdgeData(name='iridium dioxide dust', base_quant=-1)"];
-	99 -> 21	[key=0,
+	98 -> 21	[key=0,
 		fontname=arial,
 		label="x74
 483.636",
 		object="EdgeData(name='acidic iridium solution', base_quant=-1)"];
-	100 -> 22	[key=0,
+	99 -> 22	[key=0,
 		fontname=arial,
 		label="x78
 0.484",
 		object="EdgeData(name='iridium chloride dust', base_quant=-1)"];
-	101 -> 25	[key=0,
+	100 -> 25	[key=0,
 		fontname=arial,
 		label="x87
 0.484",
 		object="EdgeData(name='metallic sludge dust residue dust', base_quant=-1)"];
-	103 -> 23	[key=0,
+	102 -> 23	[key=0,
 		fontname=arial,
 		label="x82
 1,450.909",
 		object="EdgeData(name='calcium chloride', base_quant=-1)"];
-	106 -> 26	[key=0,
+	105 -> 26	[key=0,
 		fontname=arial,
 		label="x91
 7,000.0",
 		object="EdgeData(name='nitric acid', base_quant=-1)"];
-	106 -> 53	[key=0,
+	105 -> 53	[key=0,
 		fontname=arial,
 		label="x171
 67.2",
 		object="EdgeData(name='nitric acid', base_quant=-1)"];
-	106 -> 54	[key=0,
-		fontname=arial,
-		label="x176
-322.424",
-		object="EdgeData(name='nitric acid', base_quant=-1)"];
-	107 -> 28	[key=0,
+	106 -> 28	[key=0,
 		fontname=arial,
 		label="x97
 0.56",
 		object="EdgeData(name='zinc dust', base_quant=-1)"];
-	108 -> 29	[key=0,
+	107 -> 29	[key=0,
 		fontname=arial,
 		label="x100
 3.36",
 		object="EdgeData(name='zinc sulfate dust', base_quant=-1)"];
-	109 -> 30	[key=0,
+	108 -> 30	[key=0,
 		fontname=arial,
 		label="x104
 0.56",
 		object="EdgeData(name='crude rhodium metal dust', base_quant=-1)"];
-	110 -> 44	[key=0,
+	109 -> 44	[key=0,
 		fontname=arial,
 		label="x146
 1k",
 		object="EdgeData(name='sulfuric acid', base_quant=-1)"];
-	110 -> 56	[key=0,
+	109 -> 55	[key=0,
 		fontname=arial,
-		label="x183
+		label="x179
 560.0",
 		object="EdgeData(name='sulfuric acid', base_quant=-1)"];
-	111 -> 30	[key=0,
+	110 -> 30	[key=0,
 		fontname=arial,
 		label="x105
 0.56",
 		object="EdgeData(name='salt', base_quant=-1)"];
-	111 -> 52	[key=0,
+	110 -> 52	[key=0,
 		fontname=arial,
 		label="x169
 0.645",
 		object="EdgeData(name='salt', base_quant=-1)"];
-	261	[color=purple,
+	255	[color=purple,
 		fontname=arial,
-		label="(261) [Sink] salt",
+		label="(255) [Sink] salt",
 		shape=box];
-	111 -> 261	[key=0,
+	110 -> 255	[key=0,
 		fontname=arial,
-		label="e261
+		label="e255
 0.0984",
 		object=None];
-	112 -> 33	[key=0,
+	111 -> 33	[key=0,
 		fontname=arial,
 		label="x114
 1.68",
 		object="EdgeData(name='rhodium salt dust', base_quant=-1)"];
-	113 -> 32	[key=0,
+	112 -> 32	[key=0,
 		fontname=arial,
 		label="x111
 48.364",
 		object="EdgeData(name='osmium solution', base_quant=-1)"];
-	115 -> 34	[key=0,
+	114 -> 34	[key=0,
 		fontname=arial,
 		label="x116
 336.0",
 		object="EdgeData(name='rhodium salt solution', base_quant=-1)"];
-	116 -> 34	[key=0,
+	115 -> 34	[key=0,
 		fontname=arial,
 		label="x117
 0.336",
 		object="EdgeData(name='sodium nitrate dust', base_quant=-1)"];
-	117 -> 35	[key=0,
+	116 -> 35	[key=0,
 		fontname=arial,
 		label="x120
 0.336",
 		object="EdgeData(name='rhodium nitrate', base_quant=-1)"];
-	118 -> 36	[key=0,
+	117 -> 36	[key=0,
 		fontname=arial,
 		label="x122
 0.319",
 		object="EdgeData(name='rhodium filter cake dust', base_quant=-1)"];
-	119 -> 37	[key=0,
+	118 -> 37	[key=0,
 		fontname=arial,
 		label="x124
 319.2",
 		object="EdgeData(name='rhodium filter cake solution', base_quant=-1)"];
-	120 -> 38	[key=0,
+	119 -> 38	[key=0,
 		fontname=arial,
 		label="x126
 0.319",
 		object="EdgeData(name='reprecipitated rhodium dust', base_quant=-1)"];
-	122 -> 40	[key=0,
+	121 -> 40	[key=0,
 		fontname=arial,
 		label="x135
 725.455",
 		object="EdgeData(name='ruthenium tetroxide solution', base_quant=-1)"];
-	123 -> 40	[key=0,
+	122 -> 40	[key=0,
 		fontname=arial,
 		label="x134
 725.455",
 		object="EdgeData(name='steam', base_quant=-1)"];
-	124 -> 41	[key=0,
+	123 -> 41	[key=0,
 		fontname=arial,
 		label="x137
 1,450.909",
 		object="EdgeData(name='hot ruthenium tetroxide solution', base_quant=-1)"];
-	125 -> 42	[key=0,
+	124 -> 42	[key=0,
 		fontname=arial,
 		label="x140
 1,160.727",
 		object="EdgeData(name='ruthenium tetroxide', base_quant=-1)"];
-	126 -> 43	[key=0,
+	125 -> 43	[key=0,
 		fontname=arial,
 		label="x143
 1.161",
 		object="EdgeData(name='ruthenium tetroxide dust', base_quant=-1)"];
-	128 -> 44	[key=0,
+	127 -> 44	[key=0,
 		fontname=arial,
 		label="x147
 2k",
 		object="EdgeData(name='sodium formate', base_quant=-1)"];
-	129 -> 49	[key=0,
+	128 -> 49	[key=0,
 		fontname=arial,
 		label="x159
 7",
 		object="EdgeData(name='sodium sulfate dust', base_quant=-1)"];
-	130 -> 45	[key=0,
+	129 -> 45	[key=0,
 		fontname=arial,
 		label="x150
 2k",
 		object="EdgeData(name='carbon monoxide', base_quant=-1)"];
-	131 -> 45	[key=0,
+	130 -> 45	[key=0,
 		fontname=arial,
 		label="x151
 6",
 		object="EdgeData(name='sodium hydroxide dust', base_quant=-1)"];
-	132	[color=red,
+	131	[color=red,
 		fontname=arial,
-		label="(132) carbon dust",
+		label="(131) carbon dust",
 		shape=box];
-	132 -> 47	[key=0,
+	131 -> 47	[key=0,
 		fontname=arial,
 		label="x154
 2",
 		object="EdgeData(name='carbon dust', base_quant=-1)"];
-	134 -> 50	[key=0,
+	133 -> 50	[key=0,
 		fontname=arial,
 		label="x163
 2",
 		object="EdgeData(name='sodium dust', base_quant=-1)"];
-	134 -> 53	[key=0,
+	133 -> 53	[key=0,
 		fontname=arial,
 		label="x172
 0.0672",
 		object="EdgeData(name='sodium dust', base_quant=-1)"];
-	135	[color=red,
+	134	[color=red,
 		fontname=arial,
-		label="(135) nitrogen",
+		label="(134) nitrogen",
 		shape=box];
-	135 -> 51	[key=0,
+	134 -> 51	[key=0,
 		fontname=arial,
 		label="x166
 6,680.8",
 		object="EdgeData(name='nitrogen', base_quant=-1)"];
-	135 -> 55	[key=0,
+	134 -> 54	[key=0,
 		fontname=arial,
-		label="x180
-389.624",
+		label="x176
+67.2",
 		object="EdgeData(name='nitrogen', base_quant=-1)"];
-	254	[color=purple,
+	249	[color=purple,
 		fontname=arial,
-		label="(254) [Source] PMP",
+		label="(249) [Source] PMP",
 		shape=box];
-	254 -> 71	[key=0,
+	249 -> 70	[key=0,
 		fontname=arial,
-		label="e254
+		label="e249
 2.178",
 		object=None];
-	255	[color=purple,
+	250	[color=purple,
 		fontname=arial,
-		label="(255) [Source] calcium dust",
+		label="(250) [Source] calcium dust",
 		shape=box];
-	255 -> 74	[key=0,
+	250 -> 73	[key=0,
 		fontname=arial,
-		label="e255
+		label="e250
 0.967",
+		object=None];
+	251	[color=purple,
+		fontname=arial,
+		label="(251) [Source] chlorine",
+		shape=box];
+	251 -> 78	[key=0,
+		fontname=arial,
+		label="e251
+2,178.457",
+		object=None];
+	252	[color=purple,
+		fontname=arial,
+		label="(252) [Source] hydrogen",
+		shape=box];
+	252 -> 79	[key=0,
+		fontname=arial,
+		label="e252
+32,726.909",
+		object=None];
+	253	[color=purple,
+		fontname=arial,
+		label="(253) [Source] sulfur dust",
+		shape=box];
+	253 -> 91	[key=0,
+		fontname=arial,
+		label="e253
+0.147",
+		object=None];
+	254	[color=purple,
+		fontname=arial,
+		label="(254) [Source] oxygen",
+		shape=box];
+	254 -> 93	[key=0,
+		fontname=arial,
+		label="e254
+6,003.547",
 		object=None];
 	256	[color=purple,
 		fontname=arial,
-		label="(256) [Source] chlorine",
+		label="(256) [Source] sodium dust",
 		shape=box];
-	256 -> 79	[key=0,
+	256 -> 133	[key=0,
 		fontname=arial,
 		label="e256
-2,178.457",
-		object=None];
-	257	[color=purple,
-		fontname=arial,
-		label="(257) [Source] hydrogen",
-		shape=box];
-	257 -> 80	[key=0,
-		fontname=arial,
-		label="e257
-33,371.758",
-		object=None];
-	258	[color=purple,
-		fontname=arial,
-		label="(258) [Source] sulfur dust",
-		shape=box];
-	258 -> 92	[key=0,
-		fontname=arial,
-		label="e258
-0.147",
-		object=None];
-	259	[color=purple,
-		fontname=arial,
-		label="(259) [Source] potassium dust",
-		shape=box];
-	259 -> 93	[key=0,
-		fontname=arial,
-		label="e259
-0.322",
-		object=None];
-	260	[color=purple,
-		fontname=arial,
-		label="(260) [Source] oxygen",
-		shape=box];
-	260 -> 94	[key=0,
-		fontname=arial,
-		label="e260
-7,293.244",
-		object=None];
-	262	[color=purple,
-		fontname=arial,
-		label="(262) [Source] sodium dust",
-		shape=box];
-	262 -> 134	[key=0,
-		fontname=arial,
-		label="e262
 0.0672",
 		object=None];
 }

@@ -144,6 +144,32 @@ if __name__ == '__main__':
                     if all(getattr(nobj, attr) == machine_dict[attr] for attr in ['m', 'I', 'O', 'eut', 'dur']):
                         subgraphs[group_name].append(idx)
 
+    # Add IngredientNodes and ExternalNodes to subgraphs
+    # For shared IngredientNodes, keep outside subgraph
+    # If not shared, add to subgraph
+    idx_to_node = {idx: node for idx, node in G.nodes.items()}
+    idx_to_subgraph = {idx: subgraph for subgraph, subgraph_nodes in subgraphs.items() for idx in subgraph_nodes}
+    for ing_idx, node in G.nodes.items():
+        nobj = node['object']
+        if isinstance(nobj, IngredientNode):
+            shared = False
+            # Get connected nodes (successor and predecessor)
+            connected_nodes = list(G.successors(ing_idx)) + list(G.predecessors(ing_idx))
+            known_subgraphs = set()
+            for connected_idx in connected_nodes:
+                if connected_idx in idx_to_subgraph:
+                    known_subgraphs.add(idx_to_subgraph[connected_idx])
+            if len(known_subgraphs) == 1:
+                subgraphs[list(known_subgraphs)[0]].append(ing_idx)
+
+
+            # for subgraph_nodes in subgraphs.values():
+            #     if idx in subgraph_nodes:
+            #         shared = True
+            #         break
+            # if not shared:
+            #     subgraphs['Ingredients'].append(idx)
+
     # Add label for ease of reading
     print('Generating graph...')
     for idx, node in G.nodes.items():
@@ -188,19 +214,19 @@ if __name__ == '__main__':
     ag.graph_attr['rankdir'] = 'TB'
     ag.graph_attr['strict'] = 'false'
     ag.graph_attr['splines'] = 'spline'
-    ag.graph_attr['nodesep'] = 0.25
+    ag.graph_attr['nodesep'] = 0.5
     ag.graph_attr['ranksep'] = 1.25
     ag.graph_attr['newrank'] = 'true'
 
-    for subgraph_name, subgraph_nodes in subgraphs.items():
-        group = subgraph_name
-        cluster_color = 'black'
-        font = 'verdana'
-        payload = group.upper()
-        ln = f'<tr><td align="left"><font color="{cluster_color}" face="{font}">{payload}</font></td></tr>'
-        tb = f'<<table border="0">{ln}</table>>'
+    # for subgraph_name, subgraph_nodes in subgraphs.items():
+    #     group = subgraph_name
+    #     cluster_color = 'black'
+    #     font = 'verdana'
+    #     payload = group.upper()
+    #     ln = f'<tr><td align="left"><font color="{cluster_color}" face="{font}">{payload}</font></td></tr>'
+    #     tb = f'<<table border="0">{ln}</table>>'
 
-        sg = ag.add_subgraph(subgraph_nodes, name=f'cluster_{subgraph_name}', label=tb)
+    #     sg = ag.add_subgraph(subgraph_nodes, name=f'cluster_{subgraph_name}', label=tb)
 
     ag.write('proto.dot')
 

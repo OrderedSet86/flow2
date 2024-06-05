@@ -195,7 +195,7 @@
     potassium disulfate dust: 11
   eut: 90
   dur: 2.1
-  group: K2S2O7 recycling
+  group: rare element prep
 - m: fluid extractor
   tier: HV
   I:
@@ -204,7 +204,7 @@
     molten potassium disulfate: 144
   eut: 30
   dur: 1.15
-  group: K2S2O7 recycling
+  group: rare element prep
 - m: fluid solidifier
   tier: HV
   I:
@@ -213,7 +213,7 @@
     potassium ingot: 1
   eut: 7
   dur: 1.6
-  group: K2S2O7 recycling
+  group: rare element prep
 - m: macerator
   tier: HV
   I:
@@ -222,7 +222,7 @@
     potassium dust: 1
   eut: 4
   dur: 1.95
-  group: K2S2O7 recycling
+  group: rare element prep
 
 - m: electric blast furnace
   tier: HV
@@ -308,7 +308,7 @@
     aqua regia: 2000
   eut: 30
   dur: 1.5
-  group: aqua regia recycling
+  group: platinum
 - m: large chemical reactor
   tier: HV
   I:
@@ -318,7 +318,7 @@
     nitric acid: 2000
   eut: 30
   dur: 16
-  group: aqua regia recycling
+  # group: aqua regia recycling
 
 - m: large chemical reactor
   tier: HV
@@ -584,17 +584,17 @@
   eut: 60
   dur: 0.4
   group: rhodium
-- m: large chemical reactor
-  tier: HV
-  I:
-    potassium dust: 1
-    nitric acid: 1000
-  O:
-    saltpeter: 5
-    hydrogen: 1000
-  eut: 30
-  dur: 5
-  group: rare element prep
+# - m: large chemical reactor
+#   tier: HV
+#   I:
+#     potassium dust: 1
+#     nitric acid: 1000
+#   O:
+#     saltpeter: 5
+#     hydrogen: 1000
+#   eut: 30
+#   dur: 5
+#   group: rare element prep
 - m: large chemical reactor
   tier: HV
   I:
@@ -605,7 +605,6 @@
     nitric acid: 1000
   eut: 30
   dur: 16
-  group: rare element prep
 - m: electrolyzer
   tier: HV
   I:
@@ -628,7 +627,8 @@
     - oxygen
     - nitrogen
     - carbon dust
-    - potassium dust
+    # - potassium dust
     - sodium dust
     - salt
     - sulfur dust
+    - saltpeter
