@@ -1,3 +1,4 @@
+from collections import defaultdict
 from math import copysign
 from pathlib import Path
 
@@ -7,7 +8,7 @@ import sympy
 
 from src.core.addUserLocking import addSympyUserChosenQuantityFromFlow1Yaml
 from src.core.connectGraph import produceConnectedGraphFromDisjoint
-from src.core.flow1Compat import constructDisjointGraphFromFlow1Yaml
+from src.core.flow1Compat import constructDisjointGraphFromFlow1Yaml, getGroupsFromFlow1Yaml
 from src.core.flow2Syntax import applyV2UserOptions
 from src.core.graphToEquations import constructSymPyFromGraph
 from src.core.postProcessing import pruneZeroEdges
@@ -93,8 +94,6 @@ if __name__ == '__main__':
         # TODO: Try doing binary search over subproblems to find problematic equation
         pass
 
-
-
     print('=====SOLUTION=====')
     augmented_solution = None
     if len(res) > 0:
@@ -131,16 +130,30 @@ if __name__ == '__main__':
     else:
         print('No solution')
 
+    # Determine subgraphs based on groups
+    # NOTE: Can only draw subgraphs around machine nodes, ingredient nodes are ambiguous
+    groups = getGroupsFromFlow1Yaml(yaml_path)
+    # Associate machine dicts with MachineNodes
+    # cannot use "m" since it not a unique identifier - need to compare all attributes
+    subgraphs = defaultdict(list)
+    for idx, node in G.nodes.items():
+        nobj = node['object']
+        if isinstance(nobj, MachineNode):
+            for group_name, grouped_machine_dicts in groups.items():
+                for machine_dict in grouped_machine_dicts:
+                    if all(getattr(nobj, attr) == machine_dict[attr] for attr in ['m', 'I', 'O', 'eut', 'dur']):
+                        subgraphs[group_name].append(idx)
+
     # Add label for ease of reading
     print('Generating graph...')
     for idx, node in G.nodes.items():
         nobj = node['object']
         if isinstance(nobj, ExternalNode):
-            node['label'] = nobj.machine
+            node['label'] = nobj.m
             node['color'] = 'purple'
         elif isinstance(nobj, MachineNode):
-            node['label'] = nobj.machine
-            if nobj.machine.startswith('[Source]') or nobj.machine.startswith('[Sink]'):
+            node['label'] = nobj.m
+            if nobj.m.startswith('[Source]') or nobj.m.startswith('[Sink]'):
                 node['color'] = 'purple'
             else:
                 node['color'] = 'green'
@@ -153,7 +166,11 @@ if __name__ == '__main__':
         node['shape'] = 'box'
         node['label'] = f"({idx}) {node['label']}"
         node['fontname'] = 'arial'
+        
+        # Clean up stuff that doesn't need to be in dotfile
+        del node['object']
     
+    # Add edge quantities
     for idx, edge in G.edges.items():
         index_idx = idx[:2]
         label_parts = [str(edge_to_variable[index_idx])]
@@ -168,4 +185,23 @@ if __name__ == '__main__':
         edge['fontname'] = 'arial'
 
     ag = nx.nx_agraph.to_agraph(G)
+    ag.graph_attr['rankdir'] = 'TB'
+    ag.graph_attr['strict'] = 'false'
+    ag.graph_attr['splines'] = 'spline'
+    ag.graph_attr['nodesep'] = 0.25
+    ag.graph_attr['ranksep'] = 1.25
+    ag.graph_attr['newrank'] = 'true'
+
+    for subgraph_name, subgraph_nodes in subgraphs.items():
+        group = subgraph_name
+        cluster_color = 'black'
+        font = 'verdana'
+        payload = group.upper()
+        ln = f'<tr><td align="left"><font color="{cluster_color}" face="{font}">{payload}</font></td></tr>'
+        tb = f'<<table border="0">{ln}</table>>'
+
+        sg = ag.add_subgraph(subgraph_nodes, name=f'cluster_{subgraph_name}', label=tb)
+
+    ag.write('proto.dot')
+
     ag.draw('proto.pdf', prog='dot')

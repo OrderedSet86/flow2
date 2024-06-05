@@ -2,10 +2,10 @@
 from pathlib import Path
 
 import networkx as nx
-import yaml
 from networkx import MultiDiGraph
 from typing import Union
 
+from src.core.sharedYamlLoad import loadYamlFile
 from src.data.basicTypes import EdgeData, IngredientNode, MachineNode
 
 
@@ -62,8 +62,7 @@ def applyV2UserOptions(
     ): # outputs system of equations
 
     # Get user options from YAML file
-    with open(yaml_path, 'r') as f:
-        conf = yaml.safe_load(f)
+    conf = loadYamlFile(yaml_path)
     
     for user_dict in conf:
         if 'v2_node_type' in user_dict:

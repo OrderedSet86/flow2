@@ -5,11 +5,11 @@ from typing import Any, Optional
 
 @dataclass
 class MachineNode:
-    machine: str
+    m: str
     I: dict
     O: dict
     eut: int
-    dur_ticks: int
+    dur: int
 
 @dataclass
 class IngredientNode:

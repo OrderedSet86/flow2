@@ -1,15 +1,15 @@
+from collections import defaultdict
 from pathlib import Path
 
 import networkx as nx
-import yaml
 from typing import Union
 
+from src.core.sharedYamlLoad import loadYamlFile
 from src.data.basicTypes import EdgeData, IngredientNode, MachineNode
 
 
 def constructDisjointGraphFromFlow1Yaml(yaml_path: Union[str, Path], ) -> nx.MultiDiGraph:
-    with open(yaml_path, 'r') as f:
-        conf = yaml.safe_load(f)
+    conf = loadYamlFile(yaml_path)
 
     # MultiDiGraph = DiGraph, but self edges and parallel edges are allowed
     G = nx.MultiDiGraph()
@@ -39,3 +39,14 @@ def constructDisjointGraphFromFlow1Yaml(yaml_path: Union[str, Path], ) -> nx.Mul
                 node_id += 1
 
     return G
+
+
+def getGroupsFromFlow1Yaml(yaml_path: Union[str, Path]) -> dict:
+    conf = loadYamlFile(yaml_path)
+
+    groups = defaultdict(list)
+    for machine_dict in conf:
+        if 'group' in machine_dict:
+            groups[machine_dict['group']].append(machine_dict)
+
+    return groups

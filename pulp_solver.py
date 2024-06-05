@@ -196,11 +196,11 @@ if __name__ == '__main__':
     for idx, node in G.nodes.items():
         nobj = node['object']
         if isinstance(nobj, ExternalNode):
-            node['label'] = nobj.machine
+            node['label'] = nobj.m
             node['color'] = 'purple'
         elif isinstance(nobj, MachineNode):
-            node['label'] = nobj.machine
-            if nobj.machine.startswith('[Source]') or nobj.machine.startswith('[Sink]'):
+            node['label'] = nobj.m
+            if nobj.m.startswith('[Source]') or nobj.m.startswith('[Sink]'):
                 node['color'] = 'purple'
             else:
                 node['color'] = 'green'
