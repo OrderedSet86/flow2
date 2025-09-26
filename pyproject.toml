@@ -1,0 +1,20 @@
+[project]
+name = "flowv2"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "networkx>=3.5",
+    "pulp>=3.3.0",
+    "pygraphviz>=1.14",
+    "pyyaml>=6.0.3",
+    "sympy>=1.14.0",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.30.1",
+    "matplotlib>=3.10.6",
+    "pytest>=8.4.2",
+]
