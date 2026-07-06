@@ -1,0 +1,61 @@
+{
+ "case": "mk1",
+ "backend": "highs",
+ "status": "optimal",
+ "source_count": 1,
+ "machines_used": 2,
+ "machines_total": 2,
+ "floors_used": false,
+ "gated_sources": [],
+ "gated_sinks": [
+  "heavy naquadah fuel"
+ ],
+ "terminal_sources": [
+  [
+   "naquadah solution",
+   13.0
+  ]
+ ],
+ "terminal_sinks": [
+  [
+   "naquadah fuel mk1",
+   10.0
+  ],
+  [
+   "naquadah asphalt",
+   1.3
+  ],
+  [
+   "naquadah gas",
+   39.0
+  ]
+ ],
+ "external_quantity": 63.55,
+ "total_flow": 82.55,
+ "values": {
+  "snk0": 0.25,
+  "snk1": 0.0,
+  "snk2": 10.0,
+  "snk3": 0.0,
+  "snk4": 1.3,
+  "snk5": 39.0,
+  "src0": 0.0,
+  "src1": 0.0,
+  "src2": 0.0,
+  "src3": 13.0,
+  "src4": 0.0,
+  "src5": 0.0,
+  "x0": 3.0,
+  "x1": 6.5,
+  "x2": 10.0,
+  "x3": 13.0,
+  "x4": 1.3,
+  "x5": 3.25,
+  "x6": 6.5,
+  "x7": 39.0,
+  "y_snk[heavy naquadah fuel]": 1.0,
+  "y_snk[light naquadah fuel]": 0.0,
+  "y_src[heavy naquadah fuel]": 0.0,
+  "y_src[light naquadah fuel]": 0.0
+ }
+}

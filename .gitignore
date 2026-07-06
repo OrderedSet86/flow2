@@ -1,2 +1,5 @@
 __pycache__/
 .idea/
+# research artifacts
+research/q3_layout/renders/
+research/q3_layout/engines/elk_runner/node_modules/

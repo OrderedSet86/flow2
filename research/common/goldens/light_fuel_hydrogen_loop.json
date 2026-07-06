@@ -1,0 +1,58 @@
+{
+ "case": "light_fuel_hydrogen_loop",
+ "backend": "highs",
+ "status": "optimal",
+ "source_count": 0,
+ "machines_used": 3,
+ "machines_total": 3,
+ "floors_used": false,
+ "gated_sources": [],
+ "gated_sinks": [],
+ "terminal_sources": [
+  [
+   "oil",
+   25.0
+  ]
+ ],
+ "terminal_sinks": [
+  [
+   "light fuel",
+   24.999999999999996
+  ],
+  [
+   "sulfur dust",
+   0.002083333333333333
+  ]
+ ],
+ "external_quantity": 50.00208333333333,
+ "total_flow": 112.50208333333333,
+ "values": {
+  "snk0": 0.0,
+  "snk1": 0.0,
+  "snk2": 0.0,
+  "snk3": 24.999999999999996,
+  "snk4": 0.0,
+  "snk5": 0.002083333333333333,
+  "src0": 0.0,
+  "src1": 0.0,
+  "src2": 0.0,
+  "src3": 0.0,
+  "src4": 25.0,
+  "src5": 0.0,
+  "x0": 4.166666666666666,
+  "x1": 25.0,
+  "x2": 2.083333333333333,
+  "x3": 24.999999999999996,
+  "x4": 25.0,
+  "x5": 25.0,
+  "x6": 2.083333333333333,
+  "x7": 4.166666666666666,
+  "x8": 0.002083333333333333,
+  "y_snk[hydrogen sulfide]": 0.0,
+  "y_snk[hydrogen]": 0.0,
+  "y_snk[sulfuric light fuel]": 0.0,
+  "y_src[hydrogen sulfide]": 0.0,
+  "y_src[hydrogen]": 0.0,
+  "y_src[sulfuric light fuel]": 0.0
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "case": "microsheep",
+ "backend": "highs",
+ "status": "optimal",
+ "source_count": 0,
+ "machines_used": 2,
+ "machines_total": 2,
+ "floors_used": false,
+ "gated_sources": [],
+ "gated_sinks": [],
+ "terminal_sources": [
+  [
+   "iron ore",
+   1.0
+  ]
+ ],
+ "terminal_sinks": [
+  [
+   "iron nugget",
+   9.0
+  ]
+ ],
+ "external_quantity": 10.0,
+ "total_flow": 12.0,
+ "values": {
+  "snk0": 0.0,
+  "snk1": 0.0,
+  "snk2": 9.0,
+  "src0": 1.0,
+  "src1": 0.0,
+  "src2": 0.0,
+  "x0": 1.0,
+  "x1": 1.0,
+  "x2": 1.0,
+  "x3": 9.0,
+  "y_snk[iron ingot]": 0.0,
+  "y_src[iron ingot]": 0.0
+ }
+}

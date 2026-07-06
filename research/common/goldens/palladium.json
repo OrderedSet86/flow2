@@ -1,0 +1,55 @@
+{
+ "case": "palladium",
+ "backend": "highs",
+ "status": "optimal",
+ "source_count": 0,
+ "machines_used": 5,
+ "machines_total": 5,
+ "floors_used": true,
+ "gated_sources": [],
+ "gated_sinks": [],
+ "terminal_sources": [
+  [
+   "ammonia",
+   12401.477777777774
+  ]
+ ],
+ "terminal_sinks": [
+  [
+   "reprecipitated palladium dust",
+   2.0
+  ]
+ ],
+ "external_quantity": 12403.477777777774,
+ "total_flow": 48531.39495555555,
+ "values": {
+  "snk0": 0.0,
+  "snk1": 0.0,
+  "snk2": 0.0,
+  "snk3": 2.0,
+  "snk4": 0.0,
+  "src0": 0.0,
+  "src1": 0.0,
+  "src2": 0.0,
+  "src3": 0.0,
+  "src4": 12401.477777777774,
+  "x0": 18.0,
+  "x1": 18000.0,
+  "x10": 1.555555555555556,
+  "x11": 0.0015555555555555561,
+  "x2": 32.0,
+  "x3": 2.0,
+  "x4": 5600.07777777778,
+  "x5": 32.001555555555555,
+  "x6": 30.401477777777774,
+  "x7": 12.401477777777774,
+  "x8": 12401.477777777774,
+  "x9": 12401.477777777774,
+  "y_snk[palladium enriched ammonia]": 0.0,
+  "y_snk[palladium metallic powder dust]": 0.0,
+  "y_snk[palladium salt dust]": 0.0,
+  "y_src[palladium enriched ammonia]": 0.0,
+  "y_src[palladium metallic powder dust]": 0.0,
+  "y_src[palladium salt dust]": 0.0
+ }
+}

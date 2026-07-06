@@ -1,0 +1,47 @@
+{
+ "case": "testProjects/loopGraph",
+ "backend": "highs",
+ "status": "optimal",
+ "source_count": 1,
+ "machines_used": 2,
+ "machines_total": 2,
+ "floors_used": false,
+ "gated_sources": [
+  "diluted sulfuric acid"
+ ],
+ "gated_sinks": [],
+ "terminal_sources": [
+  [
+   "acetic acid",
+   66.66666666666666
+  ]
+ ],
+ "terminal_sinks": [
+  [
+   "ethenone",
+   66.66666666666666
+  ]
+ ],
+ "external_quantity": 166.66666666666666,
+ "total_flow": 433.33333333333326,
+ "values": {
+  "snk0": 0.0,
+  "snk1": 0.0,
+  "snk2": 0.0,
+  "snk3": 66.66666666666666,
+  "src0": 33.33333333333334,
+  "src1": 0.0,
+  "src2": 66.66666666666666,
+  "src3": 0.0,
+  "x0": 100.0,
+  "x1": 66.66666666666666,
+  "x2": 66.66666666666666,
+  "x3": 66.66666666666666,
+  "x4": 66.66666666666666,
+  "x5": 66.66666666666666,
+  "y_snk[diluted sulfuric acid]": 0.0,
+  "y_snk[sulfuric acid]": 0.0,
+  "y_src[diluted sulfuric acid]": 1.0,
+  "y_src[sulfuric acid]": 0.0
+ }
+}

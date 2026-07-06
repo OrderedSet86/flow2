@@ -5,10 +5,17 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "grandalf>=0.8",
+    "highspy>=1.15.1",
     "networkx>=3.5",
+    "ogdf-python>=0.3.5",
+    "ogdf-wheel>=2025.10",
     "pulp>=3.3.0",
     "pygraphviz>=1.14",
+    "pyscipopt>=6.2.1",
     "pyyaml>=6.0.3",
+    "scipy>=1.18.0",
+    "shapely>=2.1.2",
     "sympy>=1.14.0",
 ]
 

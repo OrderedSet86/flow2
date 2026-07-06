@@ -1,0 +1,134 @@
+{
+ "case": "cetane",
+ "backend": "highs",
+ "status": "optimal",
+ "source_count": 0,
+ "machines_used": 9,
+ "machines_total": 9,
+ "floors_used": false,
+ "gated_sources": [],
+ "gated_sinks": [],
+ "terminal_sources": [
+  [
+   "light fuel",
+   833.3333333333334
+  ],
+  [
+   "heavy fuel",
+   166.66666666666669
+  ],
+  [
+   "carbon dust",
+   0.02
+  ],
+  [
+   "sulfur dust",
+   0.005
+  ],
+  [
+   "oxygen",
+   843.2813
+  ],
+  [
+   "nitrogen",
+   80.0
+  ],
+  [
+   "hydrogen",
+   280.0
+  ],
+  [
+   "lubricant",
+   3.3899999999999997
+  ]
+ ],
+ "terminal_sinks": [
+  [
+   "EU",
+   1500000.0
+  ]
+ ],
+ "external_quantity": 1502206.6963,
+ "total_flow": 1506616.6963,
+ "values": {
+  "snk0": 0.0,
+  "snk1": 0.0,
+  "snk10": 1500000.0,
+  "snk11": 0.0,
+  "snk12": 0.0,
+  "snk13": 0.0,
+  "snk14": 0.0,
+  "snk15": 0.0,
+  "snk16": 0.0,
+  "snk2": 0.0,
+  "snk3": 0.0,
+  "snk4": 0.0,
+  "snk5": 0.0,
+  "snk6": 0.0,
+  "snk7": 0.0,
+  "snk8": 0.0,
+  "snk9": 0.0,
+  "src0": 0.0,
+  "src1": 0.0,
+  "src10": 0.0,
+  "src11": 833.3333333333334,
+  "src12": 166.66666666666669,
+  "src13": 0.0,
+  "src14": 0.0,
+  "src15": 0.02,
+  "src16": 0.005,
+  "src2": 0.0,
+  "src3": 0.0,
+  "src4": 0.0,
+  "src5": 843.2813,
+  "src6": 0.0,
+  "src7": 80.0,
+  "src8": 280.0,
+  "src9": 3.3899999999999997,
+  "x0": 1000.0,
+  "x1": 20.0,
+  "x10": 240.0,
+  "x11": 80.0,
+  "x12": 1000.0,
+  "x13": 488.2813,
+  "x14": 3.3899999999999997,
+  "x15": 1500000.0,
+  "x16": 833.3333333333334,
+  "x17": 166.66666666666669,
+  "x18": 1000.0,
+  "x19": 5.0,
+  "x2": 1000.0,
+  "x20": 10.0,
+  "x21": 10.0,
+  "x22": 20.0,
+  "x23": 40.0,
+  "x24": 0.02,
+  "x25": 10.0,
+  "x26": 15.0,
+  "x27": 0.005,
+  "x28": 5.0,
+  "x3": 80.0,
+  "x4": 10.0,
+  "x5": 20.0,
+  "x6": 320.0,
+  "x7": 80.0,
+  "x8": 80.0,
+  "x9": 80.0,
+  "y_snk[acetic acid]": 0.0,
+  "y_snk[ammonia]": 0.0,
+  "y_snk[cetane-boosted diesel]": 0.0,
+  "y_snk[diesel]": 0.0,
+  "y_snk[ethenone]": 0.0,
+  "y_snk[nitric acid]": 0.0,
+  "y_snk[sulfuric acid]": 0.0,
+  "y_snk[tetranitromethane]": 0.0,
+  "y_src[acetic acid]": 0.0,
+  "y_src[ammonia]": 0.0,
+  "y_src[cetane-boosted diesel]": 0.0,
+  "y_src[diesel]": 0.0,
+  "y_src[ethenone]": 0.0,
+  "y_src[nitric acid]": 0.0,
+  "y_src[sulfuric acid]": 0.0,
+  "y_src[tetranitromethane]": 0.0
+ }
+}
