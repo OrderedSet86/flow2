@@ -35,6 +35,7 @@ class Case:
     graph: nx.MultiDiGraph          # connected, water removed, externals added
     pins: list                      # list[Pin]
     v2_options: dict                # {'no_source': [...], 'whitelisted_slack_variables': [...]}
+    groups: dict = None             # machine node idx -> yaml `group:` name
 
     def target_pins(self):
         return [p for p in self.pins if p.kind == 'target']
@@ -54,10 +55,33 @@ def list_cases(include_tests: bool = True) -> list:
 
 
 def _case_path(name: str) -> Path:
+    """Resolve a corpus name OR an arbitrary yaml file path (for the CLI)."""
+    direct = Path(name).expanduser()
+    if direct.suffix in ('.yaml', '.yml') and direct.exists():
+        return direct
     path = CORPUS_DIR / f'{name}.yaml'
     if not path.exists():
-        raise FileNotFoundError(path)
+        raise FileNotFoundError(f'{name}: neither a yaml path nor a corpus name')
     return path
+
+
+def _machine_groups(G: nx.MultiDiGraph, conf: list) -> dict:
+    """machine node idx -> yaml `group:` name (for subgraph rendering)."""
+    machine_index_to_node = {}
+    machine_index = 0
+    for node_idx, node in G.nodes.items():
+        if isinstance(node['object'], MachineNode):
+            machine_index_to_node[machine_index] = node_idx
+            machine_index += 1
+    groups = {}
+    machine_index = 0
+    for machine_dict in conf:
+        if not all(attr in machine_dict for attr in MACHINE_ATTRS):
+            continue
+        if 'group' in machine_dict:
+            groups[machine_index_to_node[machine_index]] = machine_dict['group']
+        machine_index += 1
+    return groups
 
 
 def _resolve_pins(G: nx.MultiDiGraph, conf: list) -> list:
@@ -143,4 +167,5 @@ def load_case(name: str, with_externals: bool = True,
     conf = loadYamlFile(path)
     pins = _resolve_pins(G, conf)
     return Case(name=name, path=path, graph=G, pins=pins,
-                v2_options=_v2_options(conf))
+                v2_options=_v2_options(conf),
+                groups=_machine_groups(G, conf))

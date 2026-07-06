@@ -64,8 +64,22 @@ def layout(graph_json: dict, style: str = 'layered', opts: dict = None,
     if style == 'orthogonal' and 'ortho_quality' not in opts:
         opts['ortho_quality'] = ('fast' if len(graph_json['nodes'])
                                  > ORTHO_FAST_THRESHOLD else 'good')
-    out = _worker_call({'graph': graph_json, 'style': style, 'opts': opts},
-                       timeout_s)
+    try:
+        out = _worker_call({'graph': graph_json, 'style': style,
+                            'opts': opts}, timeout_s)
+    except (RuntimeError, TimeoutError) as exc:
+        if not any(n.get('group') for n in graph_json['nodes']):
+            raise
+        # ClusterPlanarizationLayout segfaults on some instances (C++ crash,
+        # uncatchable in-worker). Fall back to ungrouped orthogonal; group
+        # boxes then come from the renderer's bbox overlay.
+        print(f'! ogdf cluster layout failed ({exc.__class__.__name__}); '
+              f'falling back to ungrouped layout with overlay boxes')
+        stripped = {**graph_json,
+                    'nodes': [{k: v for k, v in n.items() if k != 'group'}
+                              for n in graph_json['nodes']]}
+        out = _worker_call({'graph': stripped, 'style': style,
+                            'opts': opts}, timeout_s)
 
     sizes = {n['id']: (n['w'], n['h']) for n in graph_json['nodes']}
     nodes = {nid: tuple(xy) for nid, xy in out['nodes'].items()}
@@ -78,4 +92,6 @@ def layout(graph_json: dict, style: str = 'layered', opts: dict = None,
     from research.q3_layout.engines.clip import clip_layout
     # OGDF endpoints are node centers; clip so arrowheads are visible.
     return clip_layout({'nodes': nodes, 'sizes': sizes, 'edges': edges,
+                        'groups': {name: tuple(rect) for name, rect
+                                   in out.get('groups', {}).items()},
                         'engine': 'ogdf', 'style': style})

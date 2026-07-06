@@ -5,6 +5,13 @@
 in `temporaryFlowProjects/`, from 2-machine toys to the 56-machine palladium
 line and the 394-machine nanocircuits chart from gtnh-flow v1.*
 
+**Try it**: `uv run python -m research.cli <chart.yaml | corpus-name>`
+solves a chart, reports placements, offers enumerated same-quality
+alternatives (one prompt max), and renders SVG+PNG to `flow_out/`. Options:
+`--engine {elk,dot,ogdf,grandalf}`, `--style`, `--lead PMP` (pin the primary
+input to the top), yaml `group:` subgraph boxes, `--auto-subgraphs`
+(experimental sink-claim grouping), `--no-interactive`.
+
 math.md ended with: *"Is it salvageable to treat GTNH machine flow problems
 as a linear program? Or are we stuck with exponential time complexity?"*
 

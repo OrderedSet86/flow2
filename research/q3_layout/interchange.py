@@ -61,7 +61,20 @@ def solved_graph_json(name: str, backend: str = 'highs',
     system = build_system(case.graph, [(p.edge, p.value) for p in case.pins])
     result = solve_lexicographic(system, backend=backend)
     assert result.status == 'optimal', f'{name}: {result.status}'
+    return build_graph_json(case, system, result, lead=lead)
 
+
+def build_graph_json(case, system, result, lead: str = None,
+                     use_yaml_groups: bool = True,
+                     auto_subgraphs: bool = False) -> dict:
+    """Export a solved case as layout-input JSON (see solved_graph_json).
+    Kept separate so a caller (the CLI) can solve once, enumerate/choose an
+    alternative gate support, and re-export without re-solving.
+
+    Subgraphs: yaml `group:` names attach to machine nodes; with
+    auto_subgraphs=True the experimental sink-claim pass overrides them
+    (see sink_claim_groups)."""
+    name = case.name
     G = case.graph
     keep_edges = []
     for info in system.variables.values():
@@ -105,8 +118,18 @@ def solved_graph_json(name: str, backend: str = 'highs',
         else:
             continue
         w, h = _node_size(lines)
-        nodes.append({'id': str(idx), 'label': lines[0]['t'], 'lines': lines,
-                      'kind': kind, 'w': w, 'h': h})
+        # Every node carries its ingredient names: a machine's identity is
+        # its recipe I/O (user rule: "all ingredients need to be taken into
+        # account"), used by the stem-affinity subgraph pass.
+        if isinstance(nobj, IngredientNode):
+            ings = [nobj.name]
+        else:
+            ings = list(nobj.I) + list(nobj.O)
+        node = {'id': str(idx), 'label': lines[0]['t'], 'lines': lines,
+                'kind': kind, 'w': w, 'h': h, 'ings': ings}
+        if use_yaml_groups and case.groups and idx in case.groups:
+            node['group'] = case.groups[idx]
+        nodes.append(node)
 
     edges = []
     for i, ((u, v), ingredient, flow) in enumerate(sorted(keep_edges)):
@@ -121,10 +144,272 @@ def solved_graph_json(name: str, backend: str = 'highs',
     graph_json = {'name': name, 'nodes': nodes, 'edges': edges,
                   'meta': {'machines_used': result.machines_used,
                            'gates': result.source_count}}
+    if auto_subgraphs:
+        claims = sink_claim_groups(graph_json)
+        for node in graph_json['nodes']:
+            if node['id'] in claims:
+                node['group'] = claims[node['id']]
+            else:
+                node.pop('group', None)
+    else:
+        _adopt_ingredients(graph_json)
     graph_json = canonicalize_order(graph_json)
     if len(graph_json['nodes']) <= ORDER_SEARCH_MAX_NODES:
         graph_json = best_root_order(graph_json, lead=lead)
     return graph_json
+
+
+# Form/state words carry no subsystem identity. A closed grammar set (GT
+# naming convention), not a curated gameplay list — zero-config compliant.
+STEM_MODIFIERS = {
+    'dust', 'molten', 'ingot', 'solution', 'salt', 'enriched', 'acid',
+    'reprecipitated', 'diluted', 'crude', 'acidic', 'residue', 'metallic',
+    'powder', 'metal', 'hot', 'refined', 'small', 'tiny', 'pure', 'impure',
+    'gas', 'sheet', 'plate', 'block', 'liquid', 'mixture', 'of', 'x',
+}
+
+
+def _stems(names) -> set:
+    stems = set()
+    for name in names:
+        for token in name.lower().replace('-', ' ').split():
+            if token not in STEM_MODIFIERS and not token.isdigit():
+                stems.add(token)
+    return stems
+
+
+def _adopt_ingredients(graph_json: dict):
+    """The interchange format is the internal representation (not v1 yaml):
+    ANY node may carry 'group'. v1 yaml only tags machines, so adopt each
+    ingredient/external node into a group when every machine neighbor
+    belongs to that one group — cross-group traffic then flows box-to-box
+    instead of through stray ungrouped nodes."""
+    group_of = {n['id']: n.get('group') for n in graph_json['nodes']}
+    is_machine = {n['id']: n['kind'] == 'machine' for n in graph_json['nodes']}
+    neighbors = {}
+    for e in graph_json['edges']:
+        neighbors.setdefault(e['src'], set()).add(e['dst'])
+        neighbors.setdefault(e['dst'], set()).add(e['src'])
+    for node in graph_json['nodes']:
+        if node['kind'] == 'machine' or node.get('group'):
+            continue
+        machine_groups = {group_of[m] for m in neighbors.get(node['id'], ())
+                          if is_machine.get(m)}
+        if len(machine_groups) == 1 and None not in machine_groups:
+            node['group'] = next(iter(machine_groups))
+
+
+def sink_claim_groups(graph_json: dict) -> dict:
+    """Experimental subgraph assignment, working backwards from sinks: every
+    node joins the subgraph of its NEAREST sink (BFS hops on reversed
+    edges). Ties stay shared (ungrouped). Unique-claim turned out to label
+    only each sink's immediate tail — on interwoven charts nearly everything
+    reaches several sinks; nearest-sink partitions the whole chart.
+    Returns {node_id: group_name}."""
+    preds = {}
+    degree = {}
+    for edge in graph_json['edges']:
+        preds.setdefault(edge['dst'], []).append(edge['src'])
+        degree[edge['src']] = degree.get(edge['src'], 0) + 1
+        degree[edge['dst']] = degree.get(edge['dst'], 0) + 1
+
+    # Commodity hubs (user rule: "nuclear power and vitamin water both need
+    # water" is not cohesion): high-degree ingredient nodes connect
+    # everything to everything and must not act as connectors — not in the
+    # distance BFS, not in adoption votes, not for cluster connectivity.
+    # Degree threshold is structural, not a curated ingredient list.
+    hubs = {n['id'] for n in graph_json['nodes']
+            if n['kind'] == 'ingredient' and degree.get(n['id'], 0) >= 6}
+
+    sinks = [n for n in graph_json['nodes']
+             if n['label'].startswith('[Sink]')]
+    best = {}          # node_id -> (distance, {groups at that distance})
+    for sink in sinks:
+        group = sink['label'].removeprefix('[Sink]').strip()
+        dist = {sink['id']: 0}
+        frontier = [sink['id']]
+        while frontier:
+            nxt = []
+            for nid in frontier:
+                if nid in hubs and dist[nid] > 0:
+                    continue      # hubs receive a distance but don't relay
+                for p in preds.get(nid, ()):
+                    if p not in dist:
+                        dist[p] = dist[nid] + 1
+                        nxt.append(p)
+            frontier = nxt
+        for nid, d in dist.items():
+            if nid not in best or d < best[nid][0]:
+                best[nid] = (d, {group})
+            elif d == best[nid][0]:
+                best[nid][1].add(group)
+
+    assigned = {nid: next(iter(groups))
+                for nid, (_, groups) in best.items() if len(groups) == 1}
+
+    # Cohesion rule 1 (user insight: recycling defines subsystems): a whole
+    # strongly-connected component shares one group — the most common
+    # assignment among its members. Loops stop straddling cluster borders.
+    import networkx as nx
+    G = nx.DiGraph()
+    for e in graph_json['edges']:
+        G.add_edge(e['src'], e['dst'])
+    # Size cap: real recycle loops are small (the yaml's own "X recycling"
+    # groups are 3-6 machines). Interwoven charts have one GIANT core SCC —
+    # merging it painted all of 230_platline as a single "chlorine" cluster.
+    max_scc = max(8, len(graph_json['nodes']) // 10)
+    for scc in nx.strongly_connected_components(G):
+        if len(scc) < 2 or len(scc) > max_scc:
+            continue
+        votes = {}
+        for nid in scc:
+            if nid in assigned:
+                votes[assigned[nid]] = votes.get(assigned[nid], 0) + 1
+        if votes:
+            winner = max(sorted(votes), key=votes.get)
+            for nid in scc:
+                assigned[nid] = winner
+
+    # Cohesion rule 2: a still-unassigned node (distance tie) adopts the
+    # group when all its assigned neighbors agree.
+    neighbors = {}
+    for e in graph_json['edges']:
+        neighbors.setdefault(e['src'], set()).add(e['dst'])
+        neighbors.setdefault(e['dst'], set()).add(e['src'])
+    for node in graph_json['nodes']:
+        nid = node['id']
+        if nid in assigned:
+            continue
+        around = {assigned[m] for m in neighbors.get(nid, ())
+                  if m in assigned and m not in hubs}
+        if len(around) == 1:
+            assigned[nid] = next(iter(around))
+
+    # Cohesion rule 3 — stem affinity. Form/state modifiers are stripped
+    # from ingredient names; the remaining tokens ("palladium", "potassium")
+    # are stems. A stem whose carriers sit majority-inside one cluster is
+    # OWNED by it; a node whose owned stems all point at one cluster joins
+    # it — machines via their full recipe I/O. Two passes let ownership
+    # stabilize.
+    stems_of = {n['id']: _stems(n.get('ings', ())) for n in graph_json['nodes']}
+    for _ in range(2):
+        owners = {}
+        for nid, group in assigned.items():
+            for stem in stems_of.get(nid, ()):
+                owners.setdefault(stem, {}).setdefault(group, 0)
+                owners[stem][group] += 1
+        stem_owner = {}
+        for stem, votes in owners.items():
+            total = sum(votes.values())
+            top_group, top = max(sorted(votes.items()), key=lambda kv: kv[1])
+            if top * 2 > total:
+                stem_owner[stem] = top_group
+        for node in graph_json['nodes']:
+            nid = node['id']
+            claimed = {stem_owner[s] for s in stems_of.get(nid, ())
+                       if s in stem_owner}
+            if len(claimed) == 1:
+                assigned[nid] = next(iter(claimed))
+
+    # Connectivity guard: stem affinity can pull far-flung same-stem nodes
+    # into one group, making it DISCONNECTED — semantically wrong (not a
+    # subsystem) and it segfaults OGDF's ClusterPlanarizationLayout. Keep
+    # only each group's largest weakly-connected component.
+    UG = G.to_undirected()
+    by_group = {}
+    for nid, group in assigned.items():
+        by_group.setdefault(group, set()).add(nid)
+    for group, members in by_group.items():
+        # Hubs don't hold a cluster together (paths through them removed).
+        sub = UG.subgraph(m for m in members if m in UG and m not in hubs)
+        comps = sorted(nx.connected_components(sub), key=len, reverse=True)
+        for comp in comps[1:]:
+            for nid in comp:
+                del assigned[nid]
+        for nid in members & hubs:
+            del assigned[nid]     # commodities belong to the factory
+
+    # Coverage recovery: nodes trimmed by the connectivity guard (or never
+    # assigned) join the plurality cluster among their assigned neighbors,
+    # iterated to a fixpoint — connected by construction, so the guard
+    # stays satisfied. (User target: >=80% coverage.)
+    def absorb():
+        for _ in range(10):
+            changed = False
+            for node in graph_json['nodes']:
+                nid = node['id']
+                if nid in assigned:
+                    continue
+                votes = {}
+                for m in neighbors.get(nid, ()):
+                    if m in assigned and m not in hubs:
+                        votes[assigned[m]] = votes.get(assigned[m], 0) + 1
+                if not votes:
+                    continue
+                ranked = sorted(votes.items(), key=lambda kv: (-kv[1], kv[0]))
+                if len(ranked) == 1 or ranked[0][1] > ranked[1][1]:
+                    assigned[nid] = ranked[0][0]
+                    changed = True
+            if not changed:
+                break
+
+    absorb()
+
+    # Minimum substance (user rule): a subgraph is only meaningful with at
+    # least two machines — dissolve smaller ones and let absorb() re-home
+    # their members into adjacent clusters.
+    kind_of = {n['id']: n['kind'] for n in graph_json['nodes']}
+    machine_count = {}
+    for nid, group in assigned.items():
+        if kind_of.get(nid) == 'machine':
+            machine_count[group] = machine_count.get(group, 0) + 1
+    for nid in [n for n, g in assigned.items() if machine_count.get(g, 0) < 2]:
+        del assigned[nid]
+    absorb()
+
+    # Chain pull (user rule: a producer chain belongs with its consumer):
+    # a node whose non-hub consumers sit entirely in ONE cluster follows
+    # them, provided its own upstream is unassigned or already there and it
+    # has no real tie to a different cluster. Pulls linear supply tails
+    # (source -> ingredient -> machine -> product) inside the cluster that
+    # eats their output, instead of leaving them dangling outside.
+    succs = {}
+    for e in graph_json['edges']:
+        succs.setdefault(e['src'], []).append(e['dst'])
+    for _ in range(10):
+        changed = False
+        for node in graph_json['nodes']:
+            nid = node['id']
+            down = {assigned[s] for s in succs.get(nid, ())
+                    if s in assigned and s not in hubs}
+            if len(down) != 1:
+                continue
+            target = next(iter(down))
+            if assigned.get(nid) == target:
+                continue
+            up_ok = all(assigned.get(p, target) == target
+                        for p in preds.get(nid, ()) if p not in hubs)
+            lateral = {assigned[m] for m in neighbors.get(nid, ())
+                       if m in assigned and m not in hubs}
+            if up_ok and lateral <= {target}:
+                assigned[nid] = target
+                changed = True
+        if not changed:
+            break
+
+    # Cohesion rule 4: a degree-1 external ([Source]/[Sink] pseudo node)
+    # always follows its sole neighbor — splitting "[Source] PMP" from
+    # "PMP" is never meaningful.
+    for node in graph_json['nodes']:
+        nid = node['id']
+        near = neighbors.get(nid, set())
+        if node['kind'] == 'external' and len(near) == 1:
+            other = next(iter(near))
+            if other in assigned:
+                assigned[nid] = assigned[other]
+            else:
+                assigned.pop(nid, None)
+    return assigned
 
 
 def canonicalize_order(graph_json: dict) -> dict:

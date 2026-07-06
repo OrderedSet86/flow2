@@ -15,11 +15,16 @@ from research.q1_milp.solvers import solve
 
 def enumerate_optimal_supports(system: System, backend: str = 'highs',
                                big_m: float = DEFAULT_M, max_solutions: int = 10,
-                               prefer_sinks: bool = True) -> list:
+                               prefer_sinks: bool = True,
+                               floors: dict = None) -> list:
     # max_solutions=10 per user feedback: ONE prompt with up to ~10 choices
     # is acceptable UX; anything beyond that should not be asked.
     """Return every gate support achieving the stage-1 optimum, as
-    [{'sources': [...], 'sinks': [...]}] in discovery order."""
+    [{'sources': [...], 'sinks': [...]}] in discovery order.
+
+    floors: pass LexResult.floors so enumeration runs under the same
+    all-machines-run conditions as the solve — otherwise it enumerates the
+    floor-free (bootstrap) optima, which have a different gate count."""
     gates = _gate_map(system)
 
     weights = {}
@@ -35,6 +40,8 @@ def enumerate_optimal_supports(system: System, backend: str = 'highs',
     while len(solutions) < max_solutions:
         model = _base_model(system, gates, big_m)
         model.highs_presolve_off = True
+        for ref, floor in (floors or {}).items():
+            model.bounds[ref] = (floor, None)
         model.objective = dict(weights)
         for i, support in enumerate(cuts):
             # forbid this exact support: sum_{on}(1-y) + sum_{off} y >= 1

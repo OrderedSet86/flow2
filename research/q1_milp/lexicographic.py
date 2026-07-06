@@ -75,6 +75,9 @@ class LexResult:
     # gate (big-M * integrality tolerance window): the final answer is still
     # honest, but the gate-count optimality certificate is weakened.
     count_certified: bool = True
+    # The machine floors actually applied (ref edge var -> lower bound), or
+    # None. Enumeration must reuse these to stay consistent with the solve.
+    floors: dict = None
 
 
 def _gate_map(system: System):
@@ -128,7 +131,11 @@ def solve_lexicographic(system: System, backend: str = 'highs',
                         big_m: float = DEFAULT_M, msg: bool = False,
                         max_m_growths: int = 3,
                         prefer_sinks: bool = True,
-                        use_all_machines: bool = True) -> LexResult:
+                        use_all_machines: bool = True,
+                        gate_support: dict = None) -> LexResult:
+    """gate_support: optional {'sources': [ing...], 'sinks': [ing...]} from
+    enumerate_optimal_supports — pins stage 1 to that user-chosen support so
+    stages 2-3 optimize within the chosen alternative."""
     gates = _gate_map(system)
     external = system.external_vars()
     internal = [v.name for v in system.variables.values() if v.kind == 'edge']
@@ -215,43 +222,84 @@ def solve_lexicographic(system: System, backend: str = 'highs',
             break
         return s1, attempt_m
 
-    s1, big_m = solve_stage1(big_m)          # pass 1: floor-free
-    if s1.status == 'optimal' and use_all_machines and refs:
-        idle = [ref for ref in refs.values()
-                if crafts_rate(s1.values, ref) <= USE_EPS_DETECT]
-        if idle:
-            # Bootstrap degeneracy: retry with scaled floors (pass 2).
-            set_floors_from(s1.values)
-            floors_active = True
-            s1_floored, m_floored = solve_stage1(big_m)
-            if s1_floored.status == 'optimal':
-                s1, big_m = s1_floored, m_floored
-            else:
-                floors_active = False    # keep honest pass-1 result
-    if s1.status != 'optimal':
-        return LexResult(s1.status, s1.values, [], [], [], [], -1,
-                         math.nan, math.nan, walls, big_m, backend,
-                         machines_total=len(refs), floors_used=floors_active)
+    fixed_gate_bounds = None
+    if gate_support is not None:
+        fixed_gate_bounds = {}
+        for ing, gate in gates.items():
+            if 'y_src' in gate:
+                fixed_gate_bounds[gate['y_src']] = \
+                    1.0 if ing in gate_support.get('sources', ()) else 0.0
+            if 'y_snk' in gate:
+                fixed_gate_bounds[gate['y_snk']] = \
+                    1.0 if ing in gate_support.get('sinks', ()) else 0.0
 
-    support1 = _flow_support(gates, s1.values)
-    count = sum(support1.values())
-    # Certification check: the solver claimed a better objective than the
-    # support its own flows used — an intermediate big-M/tolerance leak.
-    expected_obj = sum(stage1_weights()[y] for y, on in support1.items() if on)
-    certified = s1.objective >= expected_obj - 0.5
+    if fixed_gate_bounds is None:
+        s1, big_m = solve_stage1(big_m)      # pass 1: floor-free
+        if s1.status == 'optimal' and use_all_machines and refs:
+            idle = [ref for ref in refs.values()
+                    if crafts_rate(s1.values, ref) <= USE_EPS_DETECT]
+            if idle:
+                # Bootstrap degeneracy: retry with scaled floors (pass 2).
+                set_floors_from(s1.values)
+                floors_active = True
+                s1_floored, m_floored = solve_stage1(big_m)
+                if s1_floored.status == 'optimal':
+                    s1, big_m = s1_floored, m_floored
+                else:
+                    floors_active = False    # keep honest pass-1 result
+        if s1.status != 'optimal':
+            return LexResult(s1.status, s1.values, [], [], [], [], -1,
+                             math.nan, math.nan, walls, big_m, backend,
+                             machines_total=len(refs), floors_used=floors_active)
 
-    # ---- Stage 2: binaries free but the (weighted) count capped at the
-    # stage-1 optimum, minimize external quantity. Free binaries (not fixed
-    # support) make this a true lexicographic stage: among all minimal-count
-    # gate choices, pick the one with the least external flow. The weighted
-    # cap also locks the source-vs-sink composition chosen by the tiebreak.
+        support1 = _flow_support(gates, s1.values)
+        count = sum(support1.values())
+        # Certification check: the solver claimed a better objective than the
+        # support its own flows used — an intermediate big-M/tolerance leak.
+        expected_obj = sum(stage1_weights()[y] for y, on in support1.items() if on)
+        certified = s1.objective >= expected_obj - 0.5
+    else:
+        count = int(sum(fixed_gate_bounds.values()))
+        certified = True
+
+    # ---- Stage 2: minimize external quantity. Normally binaries are free
+    # with the (weighted) count capped at the stage-1 optimum — a true
+    # lexicographic stage picking the least external flow among minimal-count
+    # placements. With a user-chosen gate_support, the binaries are fixed to
+    # that support instead.
     model = _base_model(system, gates, big_m)
     model.highs_presolve_off = True
     add_machine_floor(model)
-    model.add(stage1_weights(), '<=', s1.objective + 0.5, name='count_cap')
+    if fixed_gate_bounds is None:
+        model.add(stage1_weights(), '<=', s1.objective + 0.5, name='count_cap')
+    else:
+        for y, val in fixed_gate_bounds.items():
+            model.bounds[y] = (val, val)
     model.objective = {v: 1.0 for v in external}
     s2 = solve(model, backend, time_limit=STAGE_TIME_LIMIT, msg=msg)
     walls['stage2'] = s2.wall_seconds
+    if s2.status == 'optimal' and fixed_gate_bounds is not None \
+            and use_all_machines and refs and not floors_active:
+        # Fixed-support path skipped stage 1, so run the two-pass floor
+        # logic here: without it a chosen alternative could bring back the
+        # bootstrap degeneracy (idle machines).
+        if any(crafts_rate(s2.values, ref) <= USE_EPS_DETECT
+               for ref in refs.values()):
+            set_floors_from(s2.values)
+            floors_active = True
+            model = _base_model(system, gates, big_m)
+            model.highs_presolve_off = True
+            add_machine_floor(model)
+            for y, val in fixed_gate_bounds.items():
+                model.bounds[y] = (val, val)
+            model.objective = {v: 1.0 for v in external}
+            s2_floored = solve(model, backend, time_limit=STAGE_TIME_LIMIT,
+                               msg=msg)
+            walls['stage2'] += s2_floored.wall_seconds
+            if s2_floored.status == 'optimal':
+                s2 = s2_floored
+            else:
+                floors_active = False
     if s2.status != 'optimal':
         return LexResult(s2.status, s2.values, [], [], [], [], count,
                          math.nan, math.nan, walls, big_m, backend,
@@ -308,7 +356,8 @@ def solve_lexicographic(system: System, backend: str = 'highs',
                      machines_total=len(refs),
                      machines_used=sum(used_final.values()),
                      idle_machines=idle, floors_used=floors_active,
-                     count_certified=certified)
+                     count_certified=certified,
+                     floors=dict(machine_floors) if floors_active else None)
 
 
 def edge_values(system: System, result: LexResult) -> dict:

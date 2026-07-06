@@ -30,4 +30,8 @@ def layout(graph_json: dict, style: str = 'layered') -> dict:
         edges.append({'points': pts, 'src': edge['src'], 'dst': edge['dst'],
                       'label': edge['label']})
     return {'nodes': nodes, 'sizes': sizes, 'edges': edges,
+            # ELK lays groups out natively (compound nodes); rects are
+            # engine output, not post-hoc bounding boxes.
+            'groups': {name: tuple(rect)
+                       for name, rect in out.get('groups', {}).items()},
             'engine': 'elk', 'style': style}

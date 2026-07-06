@@ -35,6 +35,60 @@ cppinclude('ogdf/planarity/PlanarizationLayout.h')
 cppinclude('ogdf/planarity/SubgraphPlanarizer.h')
 cppinclude('ogdf/planarity/PlanarSubgraphFast.h')
 cppinclude('ogdf/planarity/FixedEmbeddingInserter.h')
+cppinclude('ogdf/cluster/ClusterGraph.h')
+cppinclude('ogdf/cluster/ClusterGraphAttributes.h')
+cppinclude('ogdf/cluster/ClusterPlanarizationLayout.h')
+
+
+def run_clustered(graph, opts):
+    """Cluster-aware orthogonal layout (ClusterPlanarizationLayout): groups
+    become OGDF clusters the planarizer must keep contiguous."""
+    G, GA, nodes, edges = build(graph)
+    CG = ogdf.ClusterGraph(G)
+    CGA = ogdf.ClusterGraphAttributes(
+        CG, ogdf.GraphAttributes.nodeGraphics | ogdf.GraphAttributes.edgeGraphics
+        | ogdf.ClusterGraphAttributes.clusterGraphics)
+    for node in graph['nodes']:
+        v = nodes[node['id']]
+        CGA.width[v] = node['w']
+        CGA.height[v] = node['h']
+    by_group = {}
+    for node in graph['nodes']:
+        if node.get('group'):
+            by_group.setdefault(node['group'], []).append(nodes[node['id']])
+    # Singleton clusters are degenerate for the c-planarizer; skip them.
+    by_group = {g: m for g, m in by_group.items() if len(m) >= 2}
+    clusters = {}
+    for gname, members in sorted(by_group.items()):
+        lst = ogdf.SList[ogdf.node]()
+        for v in members:
+            lst.pushBack(v)
+        clusters[gname] = CG.createCluster(lst)
+
+    cpl = ogdf.ClusterPlanarizationLayout()
+    try:
+        cpl.pageRatio(float(opts.get('page_ratio', 0.5)))  # area/aspect knob
+    except Exception:
+        pass
+    cpl.call(G, CGA, CG)
+
+    out_nodes = {}
+    for node in graph['nodes']:
+        v = nodes[node['id']]
+        out_nodes[node['id']] = [float(CGA.x[v]), float(CGA.y[v])]
+    out_edges = []
+    for edge in graph['edges']:
+        e = edges[edge['id']]
+        pts = [out_nodes[edge['src']]]
+        for p in CGA.bends[e]:
+            pts.append([float(p.m_x), float(p.m_y)])
+        pts.append(out_nodes[edge['dst']])
+        out_edges.append({'id': edge['id'], 'points': pts})
+    groups = {}
+    for gname, c in clusters.items():
+        groups[gname] = [float(CGA.x(c)), float(CGA.y(c)),
+                         float(CGA.width(c)), float(CGA.height(c))]
+    return {'nodes': out_nodes, 'edges': out_edges, 'groups': groups}
 
 
 def _keep(obj):
@@ -63,6 +117,8 @@ def run(request):
     style = request['style']
     opts = request.get('opts') or {}
     ogdf.setSeed(int(opts.get('seed', 1337)))   # reproducible layouts
+    if style == 'orthogonal' and any(n.get('group') for n in graph['nodes']):
+        return run_clustered(graph, opts)
     G, GA, nodes, edges = build(graph)
 
     if style == 'layered':
